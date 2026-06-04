@@ -35,7 +35,7 @@ O software segue rigorosos padrões de qualidade e arquitetura moderna:
 
 O grupo é composto por 4 integrantes, com a seguinte divisão de módulos:
 
-* **Daniel Barros (Líder Arquitetural)**:
+* **Daniel Barros**:
     * CRUD de Categorias (Classificação dos itens para relatórios).
     * Implementação da Facade e controle de sessão do usuário.
 * **Yan**:
@@ -43,7 +43,7 @@ O grupo é composto por 4 integrantes, com a seguinte divisão de módulos:
     * CRUD de Fornecedores/Parceiros (Origem dos itens sublocados).
 * **Vinicius**:
     * CRUD de Contratos de Aluguel (Registro de transações e cálculo de datas).
-* **Integrante 4**:
+* **João Flavio**:
     * CRUD de Usuários (Clientes, Funcionários e Administradores).
     * CRUD de Multas e Ocorrências (Registro de avarias e penalidades).
 
