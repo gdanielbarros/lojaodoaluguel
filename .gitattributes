@@ -1,0 +1,24 @@
+# Padroniza todas as quebras de linha para LF
+* text=auto eol=lf
+
+# Java
+*.java text eol=lf
+
+# Maven
+*.xml  text eol=lf
+
+# CSV
+*.csv  text eol=lf
+
+# Markdown e documentação
+*.md   text eol=lf
+
+# Configurações
+*.properties text eol=lf
+*.yml        text eol=lf
+
+# Binários — não converter
+*.jar  binary
+*.png  binary
+*.jpg  binary
+*.pdf  binary
