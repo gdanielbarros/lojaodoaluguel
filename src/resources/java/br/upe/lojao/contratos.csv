@@ -1,1 +1,1 @@
-id,idCliente,dataInicio,dataFinal,diasAlugado,valorTotal,idItem,status
+id,idCliente,dataInicio,dataFinal,diasAlugado,valorTotal,idItem,status,idMulta,valorMulta
