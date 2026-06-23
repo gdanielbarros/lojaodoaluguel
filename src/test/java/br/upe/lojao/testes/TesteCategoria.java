@@ -1,10 +1,8 @@
-package br.upe.lojao.models;        // para Categoria, Fornecedor
-package br.upe.lojao.camada2_negocios;  // para OperacaoCategoria, OperacaoFornecedor
-
-import com.loja.model.Categoria;
-import com.loja.service.OperacaoCategoria;
-
+package br.upe.lojao.testes;  // para OperacaoCategoria, OperacaoFornecedor
+import br.upe.lojao.models.Categoria; // para Categoria, Fornecedor
+import br.upe.lojao.camada2_negocios.OperacaoCategoria;
 import java.util.List;
+
 
 /**
  * PROVA DE CONCEITO - módulo Categoria/Fornecedor
