@@ -109,7 +109,7 @@ public class OperaçãoMultas implements Serviços {
 		LocalDateTime dataAtual = LocalDateTime.now();
 		long dias = Duration.between(dataFinal, dataAtual).toDays();
 		
-		if (dias < 0) {
+		if (dias <= 0) {
 			return new BigDecimal("0");
 		}
 		
@@ -139,10 +139,14 @@ public class OperaçãoMultas implements Serviços {
 			return false;
 		}
 		
+		int idMulta = listaContrato.get(indiceContrato).idMulta();
 		BigDecimal multa = calcularMulta(idContrato);
-		
-		Contrato contratoNovaMulta = new Contrato(listaContrato.get(indiceContrato).id(), listaContrato.get(indiceContrato).idCliente(), listaContrato.get(indiceContrato).dataInicio(), listaContrato.get(indiceContrato).dataFinal(), listaContrato.get(indiceContrato).diasAlugados(), listaContrato.get(indiceContrato).valorTotal(), listaContrato.get(indiceContrato).idItem(), listaContrato.get(indiceContrato).status(), listaContrato.get(indiceContrato).idMulta(), multa);
-		Ocorrencias multaAtualizada = new Ocorrencias(listaOcorrencias.get(indiceMulta).id(), listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), multa, listaOcorrencias.get(indiceMulta).valorPorcentagem(), listaOcorrencias.get(indiceMulta).avarias(), listaOcorrencias.get(indiceMulta).status());
+		BigDecimal zero = new BigDecimal("0");
+		if (idMulta == 0 && multa.compareTo(zero) > 0) {
+			idMulta = gerarId();
+		}
+		Contrato contratoNovaMulta = new Contrato(listaContrato.get(indiceContrato).id(), listaContrato.get(indiceContrato).idCliente(), listaContrato.get(indiceContrato).dataInicio(), listaContrato.get(indiceContrato).dataFinal(), listaContrato.get(indiceContrato).diasAlugados(), listaContrato.get(indiceContrato).valorTotal(), listaContrato.get(indiceContrato).idItem(), listaContrato.get(indiceContrato).status(), idMulta, multa);
+		Ocorrencias multaAtualizada = new Ocorrencias(idMulta, listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), multa, listaOcorrencias.get(indiceMulta).valorPorcentagem(), listaOcorrencias.get(indiceMulta).avarias(), listaOcorrencias.get(indiceMulta).status());
 		
 		this.listaContrato.remove(indiceContrato);
 		this.listaOcorrencias.remove(indiceMulta);
@@ -157,6 +161,18 @@ public class OperaçãoMultas implements Serviços {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean marcarPago(int idMulta) {
+	    if (verificarLeitura(2) == false) {return false;}
+	    int indiceMulta = encontrarNaLista(idMulta, 1);
+	    if (indiceMulta == -1) {return false;}
+
+	    Ocorrencias multaPaga = new Ocorrencias(listaOcorrencias.get(indiceMulta).id(), listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), listaOcorrencias.get(indiceMulta).valorFinal(), listaOcorrencias.get(indiceMulta).valorPorcentagem(), listaOcorrencias.get(indiceMulta).avarias(), "PAGO");
+	    listaOcorrencias.remove(indiceMulta);
+	    listaOcorrencias.add(indiceMulta, multaPaga);
+	    this.leitor.atualizarMultas(listaOcorrencias);
+	    return true;
 	}
 	
 	public boolean deletarMulta(int idMulta) {

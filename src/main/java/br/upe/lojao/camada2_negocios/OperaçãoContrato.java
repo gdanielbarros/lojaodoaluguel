@@ -58,15 +58,28 @@ public class OperaçãoContrato implements Serviços {
 	}
 	
 	public boolean verificarMultas() {
-		if(verificarLista(1) == false) {return false;}
-		OperaçãoMultas aplicador = new OperaçãoMultas();
-		for (int x = 0; x < this.listaContrato.size(); x++) {
-			if (LocalDateTime.now().isAfter(this.listaContrato.get(x).dataFinal())) {
-				aplicador.aplicarMulta(this.listaContrato.get(x).id());
-			}
-		}
-		this.listaContrato = this.leitorContrato.lerContratos();
-		return true;
+	    if(verificarLista(1) == false) {return false;}
+	    OperaçãoMultas aplicador = new OperaçãoMultas();
+	    for (int x = 0; x < this.listaContrato.size(); x++) {
+	        if (LocalDateTime.now().isAfter(this.listaContrato.get(x).dataFinal()) && this.listaContrato.get(x).status().equals("CONCLUIDO") == false) {
+	            aplicador.aplicarMulta(this.listaContrato.get(x).id());
+	        }
+	    }
+	    this.listaContrato = this.leitorContrato.lerContratos();
+	    boolean atualizado = false;
+	    for (int x = 0; x < this.listaContrato.size(); x++) {
+	        if (LocalDateTime.now().isAfter(this.listaContrato.get(x).dataFinal()) && this.listaContrato.get(x).status().equals("CONCLUIDO") == false) {
+	            Contrato contratoAtrasado = new Contrato(this.listaContrato.get(x).id(), this.listaContrato.get(x).idCliente(), this.listaContrato.get(x).dataInicio(), this.listaContrato.get(x).dataFinal(), this.listaContrato.get(x).diasAlugados(), this.listaContrato.get(x).valorTotal(), this.listaContrato.get(x).idItem(), "ATRASADO", this.listaContrato.get(x).idMulta(), this.listaContrato.get(x).valorMulta());
+	            this.listaContrato.remove(x);
+	            this.listaContrato.add(x, contratoAtrasado);
+	            atualizado = true;
+	        }
+	    }
+	    if (atualizado) {
+	        this.leitorContrato.atualizarContratos(this.listaContrato);
+	        this.listaContrato = this.leitorContrato.lerContratos();
+	    }
+	    return true;
 	}
 	
 	public boolean verificarLista(int lista) {
@@ -226,6 +239,36 @@ public class OperaçãoContrato implements Serviços {
 
 	    this.leitorContrato.atualizarContratos(this.listaContrato);
 	    verificarMultas();
+	    return true;
+	}
+	
+	public boolean atualizar(int idContrato) {
+	    if(verificarLista(1) == false) {return false;}
+	    int indiceContrato = encontrarNaLista(idContrato, 2);
+	    if (indiceContrato == -1) {return false;}
+	    
+	    int idMulta = this.listaContrato.get(indiceContrato).idMulta();
+	    LocalDateTime dataFinal = this.listaContrato.get(indiceContrato).dataFinal();
+	    LocalDateTime dataAtual = LocalDateTime.now();
+	    long diasAlugados = this.listaContrato.get(indiceContrato).diasAlugados();
+	    BigDecimal valorTotal = this.listaContrato.get(indiceContrato).valorTotal();
+
+	    if (dataAtual.isBefore(dataFinal)) {
+	        dataFinal = dataAtual;
+	        diasAlugados = Duration.between(this.listaContrato.get(indiceContrato).dataInicio(), dataAtual).toDays();
+	        valorTotal = calcularAluguel(diasAlugados, this.listaContrato.get(indiceContrato).idItem());
+	    }
+
+	    Contrato contratoAtualizado = new Contrato(this.listaContrato.get(indiceContrato).id(), this.listaContrato.get(indiceContrato).idCliente(), this.listaContrato.get(indiceContrato).dataInicio(), dataFinal, diasAlugados, valorTotal, this.listaContrato.get(indiceContrato).idItem(), "CONCLUIDO", this.listaContrato.get(indiceContrato).idMulta(), this.listaContrato.get(indiceContrato).valorMulta());
+	    this.listaContrato.remove(indiceContrato);
+	    this.listaContrato.add(indiceContrato, contratoAtualizado);
+	    this.leitorContrato.atualizarContratos(this.listaContrato);
+
+	    if (idMulta != 0) {
+	        OperaçãoMultas pagador = new OperaçãoMultas();
+	        pagador.marcarPago(idMulta);
+	    }
+
 	    return true;
 	}
 	
