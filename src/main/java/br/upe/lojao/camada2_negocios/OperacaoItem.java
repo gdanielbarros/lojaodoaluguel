@@ -8,7 +8,7 @@ import br.upe.lojao.models.Fornecedor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperacaoItem implements Servicos {
+public class OperacaoItem implements Serviços {
 
 	private ArrayList<Produtos> listaProdutos;
 	private ArrayList<Categoria> listaCategoria;
@@ -53,7 +53,7 @@ public class OperacaoItem implements Servicos {
 	
 	
 	@Override
-	public int gerarID() {
+	public int gerarId() {
 	    
 	}
 

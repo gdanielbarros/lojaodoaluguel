@@ -111,7 +111,6 @@ public class LeituraProdutos {
 			BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoCategoria));
 			for(Categoria categoria: lista) {
 				String novaLinha = categoria.getId() + "," +
-						categoria.getTaxaDiaria() + "," +
 						categoria.getNome() + "," +
 						categoria.getQuantidade();
 				escritor.write(novaLinha);

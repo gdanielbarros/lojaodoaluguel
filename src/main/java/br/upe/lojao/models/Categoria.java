@@ -13,28 +13,28 @@ public class Categoria {
 	}
 	
 	// Getters
-	public int id() {
+	public int getId() {
 	    return this.id;
 	}
 	
-	public String nome() {
+	public String getNome() {
 	    return this.nome;
 	}
 	
-	public int quantidade() {
+	public int getQuantidade() {
 	    return this.quantidade;
 	}
 
 	// Setters
-	public void id(int id) {
+	public void setId(int id) {
 	    this.id = id;
 	}
 	
-	public void nome(String nome) {
+	public void setNome(String nome) {
 	    this.nome = nome;
 	}
 	
-	public void quantidade(int quantidade) {
+	public void setQuantidade(int quantidade) {
 	    this.quantidade = quantidade;
 	}
 	
