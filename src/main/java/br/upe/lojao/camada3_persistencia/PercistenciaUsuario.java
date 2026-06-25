@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PercistenciaUsuario {
+public class PersistenciaUsuario {
 
     private String caminhoCliente = "caminho aqui";
     private String caminhoFuncionario = "caminho aqui";

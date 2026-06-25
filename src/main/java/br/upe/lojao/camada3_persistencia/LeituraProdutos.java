@@ -18,8 +18,6 @@ import br.upe.lojao.models.Fornecedor;
 public class LeituraProdutos {
 
 	private String caminhoProduto = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "produtos.csv";
-	private String caminhoCategoria = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "categoria.csv";
-	private String caminhoFornecedor = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "fornecedor.csv";
 	// depois de muitos erros eu agradeço a minha equipe por me mostrar essa linha.
 	
 	
@@ -80,88 +78,4 @@ public class LeituraProdutos {
 	}
 	
 	// minhas funções de atualizar estão bem diferentes das da outra classe, espero não ter esquecido nada.
-	
-	public ArrayList<Categoria> lerCategoria() {
-		String cadaLinha;
-		ArrayList<Categoria> listaCategorias = new ArrayList<>();
-		
-		try {
-			BufferedReader leitor = new BufferedReader(new FileReader(caminhoCategoria));
-			while ((cadaLinha = leitor.readLine()) != null) {
-				String[] partes = cadaLinha.split(",");
-				
-				//id,nome,quantidade
-				int id = Integer.parseInt(partes[0]);
-				//private String nome;
-				int quantidade = Integer.parseInt(partes[2]);
-				
-				Categoria novaCategoria = new Categoria(id, quantidade);
-				listaCategorias.add(novaCategoria);
-			}
-			leitor.close();
-		} catch (IOException e) {
-		// TODO: veja o que por aqui.	
-		}
-		return listaCategorias;
-	}
-	
-	public void atualizarCategoria(List<Categoria> lista) {
-		
-		try {
-			BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoCategoria));
-			for(Categoria categoria: lista) {
-				String novaLinha = categoria.getId() + "," +
-						categoria.getNome() + "," +
-						categoria.getQuantidade();
-				escritor.write(novaLinha);
-				escritor.newLine();
-			}
-		} catch (exception e) {
-			// TODO: o que por aqui?
-		}
-	}
-	
-	public ArrayList<Fornecedor> lerFornecedor() {
-		String cadaLinha;
-		ArrayList<Fornecedor> listaFornecedores = new ArrayList<>();
-		
-		try {
-			BufferedReader leitor = new BufferedReader(new FileReader(caminhoFornecedor));
-			while ((cadaLinha = leitor.readLine()) != null) {
-				String[] partes = cadaLinha.split(",");
-				
-				//id,nome,email,telefone,status
-				int id = Integer.parseInt(partes[0]);
-				//private String nome;
-				String email = partes[2];
-				String telefone = partes[3];
-				String status = partes[4];
-				
-				Fornecedor novoFornecedor = new Fornecedor(id, email, telefone, status);
-				listaFornecedores.add(novoFornecedor);
-			}
-			leitor.close();
-		} catch (IOException e) {
-		// TODO: veja o que por aqui.	
-		}
-		return listaFornecedores;
-		
-	}
-	
-	public void atualizarFornecedor(List<Fornecedor> lista) {
-		try {
-			BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoFornecedor));
-			for(Fornecedor fornecedor: lista) {
-				String novaLinha = fornecedor.getId() + "," +
-						fornecedor.getNome() + "," +
-						fornecedor.getEmail() + "," +
-						fornecedor.getTelefone() + "," +
-						fornecedor.getStatus();
-				escritor.write(novaLinha);
-				escritor.newLine();
-			}
-		} catch (exception e) {
-			// TODO: o que por aqui?
-		}
-	}
 }
