@@ -1,9 +1,8 @@
-package br.upe.lojao.camada3_persistencia;
+package br.upe.lojao.persistencia;
 
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
@@ -11,9 +10,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import br.upe.lojao.models.Produtos;
-import br.upe.lojao.models.Categoria;
-import br.upe.lojao.models.Fornecedor;
+import br.upe.lojao.entidades.Produtos;
+import br.upe.lojao.persistencia.entidades.Categoria;
+import br.upe.lojao.persistencia.entidades.Fornecedor;
 
 public class LeituraProdutos {
 

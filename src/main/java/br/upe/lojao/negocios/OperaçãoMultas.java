@@ -1,12 +1,12 @@
-package br.upe.lojao.camada2_negocios;
+package br.upe.lojao.negocios;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import br.upe.lojao.models.Contrato;
-import br.upe.lojao.models.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import java.util.List;
-import br.upe.lojao.camada3_persistencia.LeituraContratos;
+import br.upe.lojao.persistencia.LeituraContratos;
 
 public class OperaçãoMultas implements Serviços {
 

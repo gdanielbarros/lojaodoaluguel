@@ -1,4 +1,4 @@
-package br.upe.lojao.camada1_ui;
+package br.upe.lojao.ui;
 
 import java.util.Scanner;
 import br.upe.lojao.facade.Facade;

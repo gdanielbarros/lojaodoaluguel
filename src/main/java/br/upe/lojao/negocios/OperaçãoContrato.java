@@ -1,14 +1,14 @@
-package br.upe.lojao.camada2_negocios;
+package br.upe.lojao.negocios;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import br.upe.lojao.models.Contrato;
-import br.upe.lojao.camada3_persistencia.LeituraContratos;
-import br.upe.lojao.camada3_persistencia.LeituraProdutos;
-import br.upe.lojao.camada3_persistencia.LeituraUsuario;
-import br.upe.lojao.models.Cliente;
-import br.upe.lojao.models.Produtos;
+import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.LeituraContratos;
+import br.upe.lojao.persistencia.LeituraProdutos;
+import br.upe.lojao.persistencia.LeituraUsuario;
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.entidades.Produtos;
 import java.util.List;
 
 public class OperaçãoContrato implements Serviços {

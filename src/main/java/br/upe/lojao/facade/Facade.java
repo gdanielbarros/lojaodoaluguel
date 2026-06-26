@@ -1,13 +1,13 @@
 package br.upe.lojao.facade;
 
-import br.upe.lojao.camada1_ui.MenuAdministrador;
-import br.upe.lojao.camada1_ui.MenuCliente;
-import br.upe.lojao.camada1_ui.MenuFuncionario;
-import br.upe.lojao.camada2_negocios.OperacaoUsuario;
-import br.upe.lojao.camada3_persistencia.PercistenciaUsuario;
-import br.upe.lojao.models.Administrador;
-import br.upe.lojao.models.Cliente;
-import br.upe.lojao.models.Funcionario;
+import br.upe.lojao.ui.MenuAdministrador;
+import br.upe.lojao.ui.MenuCliente;
+import br.upe.lojao.ui.MenuFuncionario;
+import br.upe.lojao.negocios.OperacaoUsuario;
+import br.upe.lojao.persistencia.PercistenciaUsuario;
+import br.upe.lojao.persistencia.entidades.Administrador;
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;

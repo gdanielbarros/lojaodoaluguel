@@ -1,4 +1,4 @@
-package br.upe.lojao.camada1_ui;
+package br.upe.lojao.ui;
 
 public abstract class Menu extends TelaLogin {
     protected int opcao;

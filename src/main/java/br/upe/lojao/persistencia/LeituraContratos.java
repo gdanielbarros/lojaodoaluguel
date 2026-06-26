@@ -1,10 +1,10 @@
-package br.upe.lojao.camada3_persistencia;
+package br.upe.lojao.persistencia;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import br.upe.lojao.models.Contrato;
-import br.upe.lojao.models.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileReader;

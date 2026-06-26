@@ -1,4 +1,4 @@
-package br.upe.lojao.models;
+package br.upe.lojao.persistencia.entidades;
 
 public class Categoria {
 

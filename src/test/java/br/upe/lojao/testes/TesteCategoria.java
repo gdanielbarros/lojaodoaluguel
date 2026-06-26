@@ -1,6 +1,6 @@
 package br.upe.lojao.testes;  // para OperacaoCategoria, OperacaoFornecedor
-import br.upe.lojao.models.Categoria; // para Categoria, Fornecedor
-import br.upe.lojao.camada2_negocios.OperacaoCategoria;
+import br.upe.lojao.persistencia.entidades.Categoria; // para Categoria, Fornecedor
+import br.upe.lojao.negocios.OperacaoCategoria;
 import java.util.List;
 
 

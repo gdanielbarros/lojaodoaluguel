@@ -1,9 +1,9 @@
-package br.upe.lojao.camada2_negocios;
+package br.upe.lojao.negocios;
 
-import br.upe.lojao.camada3_persistencia.LeituraProdutos;
-import br.upe.lojao.models.Produtos;
-import br.upe.lojao.models.Categoria;
-import br.upe.lojao.models.Fornecedor;
+import br.upe.lojao.persistencia.LeituraProdutos;
+import br.upe.lojao.entidades.Produtos;
+import br.upe.lojao.persistencia.entidades.Categoria;
+import br.upe.lojao.persistencia.entidades.Fornecedor;
 
 import java.util.ArrayList;
 import java.util.List;

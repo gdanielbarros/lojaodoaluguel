@@ -1,4 +1,4 @@
-package br.upe.lojao.camada2_negocios;
+package br.upe.lojao.negocios;
 
 public interface Serviços {
 

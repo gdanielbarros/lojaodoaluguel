@@ -1,4 +1,4 @@
-package br.upe.lojao.camada1_ui;
+package br.upe.lojao.ui;
 
 public class MenuCliente extends Menu{
 

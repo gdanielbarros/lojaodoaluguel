@@ -1,4 +1,4 @@
-package br.upe.lojao.models;
+package br.upe.lojao.persistencia.entidades;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

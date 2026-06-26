@@ -1,6 +1,6 @@
-package br.upe.lojao.camada1_ui;
+package br.upe.lojao.ui;
 
-public class MenuAdministrador extends MenuFuncionario{
+public class MenuFuncionario extends Menu{
     @Override
     protected void imprimirRespostaFacadeBoolean(int entrada){}
 
@@ -11,7 +11,24 @@ public class MenuAdministrador extends MenuFuncionario{
     protected void imprimirRespostaFacadeListaContrato(int entrada){}
 
     @Override
-    public void receberValidarEntradas(){}
+    public void receberValidarEntradas(){
+        System.out.printf("===================Funcionario===================%n 1 - Registrar novo aluguel%n 2 - Processar devolução%n 3 - Aplicar multa%n 4 - Cadastrar cliente%n 5 - Emitir relatorio operacional%  0 - Sair");
+        try{
+            opcao = scanner.nextInt();
+            if(opcao == 1){}
+
+            else if(opcao == 2){}
+
+            else if(opcao == 3){}
+
+            else if(opcao == 4){}
+
+            else if(opcao == 5){}
+
+            else if(opcao == 0){}
+        }catch(Exception e){}
+        finally {receberValidarEntradas();}
+    }
 
     @Override
     protected void imprimirRespostaFacadeMapLista (int entrada){}
