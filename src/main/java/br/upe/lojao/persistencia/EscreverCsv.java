@@ -2,18 +2,18 @@ package br.upe.lojao.persistencia;
 
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.persistencia.entidades.IEscreverCsv;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class EscreverCSV {
+public class EscreverCsv implements IEscreverCsv {
 
     private String caminhoCliente = "caminho aqui";
     private String caminhoFuncionario = "caminho aqui";
-    private String caminhoAdministrador = "caminho aqui";
 
-    public Boolean escreverCliente(ArrayList<Cliente> clientes){
+    public boolean escreverCliente(ArrayList<Cliente> clientes){
         boolean resposta = false;
         try (BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoCliente))){
             escritor.write("id,nome,login,senha,email,telefone,cpf,statusMulta,statusContrato");
@@ -30,9 +30,9 @@ public class EscreverCSV {
         }
     }
 
-    public Boolean escreverFuncionario(ArrayList<Funcionario> funcionarios){
+    public boolean escreverFuncionario(ArrayList<Funcionario> funcionarios){
         boolean resposta = false;
-        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoCliente))){
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoFuncionario))){
             escritor.write("id,nome,login,senha,email,telefone,cpf,statusMulta,statusContrato");
             escritor.newLine();
             for(Funcionario f : funcionarios){

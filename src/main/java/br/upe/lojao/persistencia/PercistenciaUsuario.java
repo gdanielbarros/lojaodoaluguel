@@ -3,6 +3,7 @@ package br.upe.lojao.persistencia;
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.persistencia.entidades.IEscreverCsv;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -39,20 +40,20 @@ public class PercistenciaUsuario {
         return resposta;
     }
 
-    public String cadastrarCliente(Cliente cliente) {
+    public String cadastrarCliente(IEscreverCsv EscreverCsv,Cliente cliente) {
         String resposta = "Erro ao salvar os dados!";
         ArrayList<Cliente> lista = lerCliente();
         if (lista.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
         lista.add(cliente);
-        if(escreverCliente(lista)){
+        if(EscreverCsv.escreverCliente(lista)){
             resposta = "Salvo com sucesso";
         }
         return resposta;
     }
 
-    public boolean atualizarCliente(int id, int opcao, String dadoModificado) {
+    public boolean atualizarCliente(IEscreverCsv EscreverCsv,int id, int opcao, String dadoModificado) {
         boolean resposta = false;
         ArrayList<Cliente> clientes = lerCliente();
         for(int i=0 ; i < clientes.size() ; i++){
@@ -70,7 +71,7 @@ public class PercistenciaUsuario {
                     default -> c;
                 };
                 clientes.set(i, atualizado);
-                if(escreverCliente(clientes)){
+                if(EscreverCsv.escreverCliente(clientes)){
                     resposta = true;
                 }
 
@@ -79,7 +80,7 @@ public class PercistenciaUsuario {
         return resposta;
     }
 
-    public String deletarCliente(int id) {
+    public String deletarCliente(IEscreverCsv EscreverCsv,int id) {
         String resposta = "Id nao encontrado";
         ArrayList<Cliente> clientes = lerCliente();
         if (clientes.size() == 0) {
@@ -89,7 +90,7 @@ public class PercistenciaUsuario {
             Cliente c = clientes.get(i);
             if (c.id() == id) {
                 clientes.remove(i);
-                if (escreverCliente(clientes)) {
+                if (EscreverCsv.escreverCliente(clientes)) {
                     resposta = "Deletado com sucesso";
                 }
             }
@@ -112,21 +113,21 @@ public class PercistenciaUsuario {
         return lista;
     }
 
-    public String cadastrarFuncionario(Funcionario contratado) {
+    public String cadastrarFuncionario(IEscreverCsv EscreverCsv,Funcionario contratado) {
         String resposta = "Erro ao salvar informações";
         ArrayList<Funcionario> lista = lerFuncionario();
         if (lista.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
         lista.add(contratado);
-        if (escreverFuncionario(lista)) {
+        if (EscreverCsv.escreverFuncionario(lista)) {
             resposta = "Cadastrado com sucesso";
         }
         return resposta;
     }
 
 
-    public boolean atualizarFuncionario(int id, int opcao, String dadoModificado) {
+    public boolean atualizarFuncionario(IEscreverCsv EscreverCsv,int id, int opcao, String dadoModificado) {
         boolean resposta = false;
         ArrayList<Funcionario> funcionarios = lerFuncionario();
         for (int i = 0; i < funcionarios.size(); i++) {
@@ -143,7 +144,7 @@ public class PercistenciaUsuario {
                     default -> f;
                 };
                 funcionarios.set(i, atualizado);
-                if(escreverFuncionario(funcionarios)){
+                if(EscreverCsv.escreverFuncionario(funcionarios)){
                     resposta = true;
                 }
             }
@@ -152,7 +153,7 @@ public class PercistenciaUsuario {
     }
 
 
-    public String deletarFuncionario(int id) {
+    public String deletarFuncionario(IEscreverCsv EscreverCsv,int id) {
         String resposta = "Id nao encontrado";
         ArrayList<Funcionario> funcionarios = lerFuncionario();
         if (funcionarios.size() == 0) {
@@ -162,7 +163,7 @@ public class PercistenciaUsuario {
             Funcionario f = funcionarios.get(i);
             if (f.id() == id) {
                 funcionarios.remove(i);
-                if (escreverFuncionario(funcionarios)) {
+                if (EscreverCsv.escreverFuncionario(funcionarios)) {
                     resposta ="Deletado com sucesso";
                 }
             }

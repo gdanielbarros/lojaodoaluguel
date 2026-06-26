@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LerCSV {
+public class LerCsv {
 
     private String caminhoCliente = "caminho aqui";
     private String caminhoFuncionario = "caminho aqui";
