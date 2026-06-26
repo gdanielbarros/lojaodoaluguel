@@ -2,7 +2,6 @@ package br.upe.lojao.persistencia;
 
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
-import br.upe.lojao.persistencia.entidades.IEscreverCsv;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

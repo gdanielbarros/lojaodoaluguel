@@ -1,4 +1,7 @@
-package br.upe.lojao.persistencia.entidades;
+package br.upe.lojao.persistencia;
+
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
 
 import java.util.ArrayList;
 
