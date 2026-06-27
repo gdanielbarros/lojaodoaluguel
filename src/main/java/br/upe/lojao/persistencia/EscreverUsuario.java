@@ -1,13 +1,10 @@
 package br.upe.lojao.persistencia;
 
-import br.upe.lojao.persistencia.entidades.Cliente;
-import br.upe.lojao.persistencia.entidades.Funcionario;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class EscreverCsv implements IEscreverCsv {
+public class EscreverUsuario implements IEscreverUsuario {
 
     private String caminhoCliente = "caminho aqui";
     private String caminhoFuncionario = "caminho aqui";

@@ -1,7 +1,15 @@
 package br.upe.lojao.ui;
 
+import br.upe.lojao.negocios.IOperacaoUsuario;
+import br.upe.lojao.negocios.OperacaoUsuario;
+
 public abstract class Menu extends TelaLogin {
-    protected int opcao;
+
+    protected void receberValidarEntradas(){}
+
+    protected void limparBuffer(){
+        scanner.nextLine();
+    }
 
     protected void imprimirRespostaFacadeBoolean(int entrada){}
 
@@ -9,7 +17,7 @@ public abstract class Menu extends TelaLogin {
 
     protected void imprimirRespostaFacadeListaContrato(int entrada){}
 
-    public void receberValidarEntradas(){}
+    protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado){}
 
     protected void imprimirRespostaFacadeMapLista (int entrada){}
 

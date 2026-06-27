@@ -8,6 +8,9 @@ public class MenuFuncionario extends Menu{
     protected void imprimirRespostaFacadeListaProdutos(int entrada){}
 
     @Override
+    protected void imprimirRespostaFacadeString(int entrada){}
+
+    @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada){}
 
     @Override

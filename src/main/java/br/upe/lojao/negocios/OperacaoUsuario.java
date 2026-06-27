@@ -1,58 +1,59 @@
 package br.upe.lojao.negocios;
-import br.upe.lojao.facade.Facade;
-import br.upe.lojao.persistencia.entidades.Cliente;
-import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.persistencia.Cliente;
+import br.upe.lojao.persistencia.Funcionario;
+import br.upe.lojao.persistencia.IPersistenciaUsuario;
+import br.upe.lojao.persistencia.PersistenciaUsuario;
+
 import java.util.ArrayList;
 
-public class OperacaoUsuario {
-    private Facade facade;
+public class OperacaoUsuario implements IOperacaoUsuario{
 
-    public String cadastrarCliente(Cliente cliente, String tipoUsuario ){
+    IPersistenciaUsuario persistenciaUsuario = new PersistenciaUsuario();
+
+    public int autenticarUsuario(String login, String senha, String tipo) {
+        return persistenciaUsuario.autenticarUsuario(login,senha,tipo);
+    }
+
+    public String cadastrarCliente(Cliente cliente){
         String resposta;
-        if(tipoUsuario.equalsIgnoreCase("funcionario") || tipoUsuario.equalsIgnoreCase("administrador")){
-            resposta = cadastrarCliente(cliente);
-        }
-        else{
-            resposta = "Acesso negado!";
-        }
-
+        resposta = persistenciaUsuario.cadastrarCliente(cliente);
         return resposta;
     }
 
     public String editarCliente(int id, int opcao,String dadoModificado){
         String resposta = "Erro ao editar informações";
-        if(atualizarCliente()){
+        if(persistenciaUsuario.atualizarCliente(id,opcao,dadoModificado)){
             resposta = "Editado com sucesso!";
         }
         return resposta;
     }
 
     public String deletarCliente(int id){
-        return deletarCliente(id);
+        return persistenciaUsuario.deletarCliente(id);
     }
 
     public ArrayList<Cliente> buscarCliente(String nome){
-        return buscarCliente(nome);
+        return persistenciaUsuario.buscarCliente(nome);
     }
 
     public String cadastrarFuncionario(Funcionario contratado){
-        return cadastrarFuncionario(contratado);
+        return persistenciaUsuario.cadastrarFuncionario(contratado);
     }
 
     public String editarFuncionario(int id, int opcao, String dadoModificado){
         String resposta = "Erro ao editar informações";
-        if(editarFuncionario(id,opcao,dadoModificado)){
+        if(persistenciaUsuario.atualizarFuncionario(id,opcao,dadoModificado)){
             resposta = "Editado com sucesso";
         }
         return resposta;
     }
 
     public String deletarFuncionario(int id) {
-        return deletarFuncionario(id);
+        return persistenciaUsuario.deletarFuncionario(id);
     }
 
     public ArrayList<Funcionario> buscarFuncionario(String nome){
-        return buscarFuncionario(nome);
+        return persistenciaUsuario.buscarFuncionario(nome);
     }
 
 }

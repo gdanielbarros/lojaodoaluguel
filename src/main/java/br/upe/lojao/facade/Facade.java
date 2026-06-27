@@ -4,17 +4,17 @@ import br.upe.lojao.ui.MenuAdministrador;
 import br.upe.lojao.ui.MenuCliente;
 import br.upe.lojao.ui.MenuFuncionario;
 import br.upe.lojao.negocios.OperacaoUsuario;
-import br.upe.lojao.persistencia.PercistenciaUsuario;
-import br.upe.lojao.persistencia.entidades.Administrador;
-import br.upe.lojao.persistencia.entidades.Cliente;
-import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.persistencia.PersistenciaUsuario;
+import br.upe.lojao.persistencia.Administrador;
+import br.upe.lojao.persistencia.Cliente;
+import br.upe.lojao.persistencia.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Facade {
     private OperacaoUsuario operacaoUsuario = new OperacaoUsuario();
-    private PercistenciaUsuario percistenciaUsuario = new PercistenciaUsuario();
+    private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
     private MenuCliente menucliente = new MenuCliente();
     private MenuFuncionario menufuncionario = new MenuFuncionario();
     private MenuAdministrador menuadministrador = new MenuAdministrador();

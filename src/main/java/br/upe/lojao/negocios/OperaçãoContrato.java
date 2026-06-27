@@ -7,7 +7,7 @@ import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.LeituraContratos;
 import br.upe.lojao.persistencia.LeituraProdutos;
 import br.upe.lojao.persistencia.LeituraUsuario;
-import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.Cliente;
 import br.upe.lojao.entidades.Produtos;
 import java.util.List;
 

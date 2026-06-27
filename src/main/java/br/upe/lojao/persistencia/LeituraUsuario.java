@@ -1,21 +1,17 @@
 package br.upe.lojao.persistencia;
 
-import br.upe.lojao.persistencia.entidades.Administrador;
-import br.upe.lojao.persistencia.entidades.Cliente;
-import br.upe.lojao.persistencia.entidades.Funcionario;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
 
-public class LerCsv {
+public class LeituraUsuario implements ILeituraUsuario{
 
     private String caminhoCliente = "caminho aqui";
     private String caminhoFuncionario = "caminho aqui";
     private String caminhoAdministrador = "caminho aqui";
 
-    public List<Cliente> lerCliente(){
+    public ArrayList<Cliente> lerCliente(){
         ArrayList<Cliente> clientes = new ArrayList<>();
 
         try (CSVReader leitor = new CSVReader(new FileReader(caminhoCliente))) {
@@ -44,7 +40,7 @@ public class LerCsv {
         }
     }
 
-    public List<Funcionario> lerFuncionario(){
+    public ArrayList<Funcionario> lerFuncionario(){
         ArrayList<Funcionario> funcionarios = new ArrayList<>();
 
         try (CSVReader leitor = new CSVReader(new FileReader(caminhoFuncionario))) {
@@ -72,7 +68,7 @@ public class LerCsv {
     }
 
 
-    public List<Administrador> lerAdministrador(){
+    public ArrayList<Administrador> lerAdministrador(){
         ArrayList<Administrador> administradores = new ArrayList<>();
 
         try (CSVReader leitor = new CSVReader(new FileReader(caminhoAdministrador))) {
