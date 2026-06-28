@@ -10,7 +10,7 @@ import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaContratos;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
 
-public class OperacaoContrato {
+public class OperacaoContrato implements IOperacaoContrato {
 
     private IPersistenciaContrato persistencia = new PersistenciaContratos();
 
