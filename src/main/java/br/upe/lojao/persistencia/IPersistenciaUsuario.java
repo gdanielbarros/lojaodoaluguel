@@ -2,6 +2,9 @@ package br.upe.lojao.persistencia;
 
 import java.util.ArrayList;
 
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
+
 public interface IPersistenciaUsuario {
 
     int autenticarUsuario(String login, String senha, String tipo);
@@ -13,5 +16,6 @@ public interface IPersistenciaUsuario {
     boolean atualizarFuncionario(int id, int opcao, String dadoModificado);
     String deletarFuncionario(int id);
     ArrayList<Funcionario> buscarFuncionario(String nome);
+    boolean clienteExiste(int id);
 
 }

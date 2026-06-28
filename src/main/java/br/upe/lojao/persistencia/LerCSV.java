@@ -11,9 +11,10 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.util.function.Function;
 
-public class LerCSV<T> implements ILerCSV {
+public class LerCSV implements ILerCSV {
 
-    public List<T> ler(String caminho, Function<String[], T> aplicador){
+	@Override
+    public <T> List<T> ler(String caminho, Function<String[], T> aplicador){
         ArrayList<T> dadosLidos = new ArrayList<>();
 
         try (CSVReader leitor = new CSVReader(new BufferedReader(new FileReader(caminho)))){
