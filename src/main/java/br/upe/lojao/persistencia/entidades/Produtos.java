@@ -1,4 +1,4 @@
-package com.loja.model;
+package br.upe.lojao.persistencia.entidades;
 
 import java.math.BigDecimal;
 
