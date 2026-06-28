@@ -7,17 +7,20 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.util.function.Function;
 
-public class EscreverCsv<T> implements IEscreverCSV {
+public class EscreverCSV implements IEscreverCSV {
 
-    public boolean escrever(String caminho, String[] cabecalho, ArrayList<T> dados, Function<T, String[]> conversor){
+	@Override
+    public <T> boolean escrever(String caminho, String[] cabecalho, List<T> dados, Function<T, String[]> conversor){
         boolean resposta = false;
 
-        try (CSVWriter escritor = new CSVWriter(new FileWriter(caminho))){
+        try (CSVWriter escritor = new CSVWriter(new BufferedWriter(new FileWriter(caminho)))){
             escritor.writeNext(cabecalho);
             for (T entidade : dados){
                 escritor.writeNext(conversor.apply(entidade));

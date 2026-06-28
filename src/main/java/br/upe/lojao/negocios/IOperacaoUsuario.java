@@ -1,7 +1,7 @@
 package br.upe.lojao.negocios;
 
-import br.upe.lojao.persistencia.Cliente;
-import br.upe.lojao.persistencia.Funcionario;
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
 
 import java.util.ArrayList;
 

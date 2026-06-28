@@ -1,6 +1,11 @@
 package br.upe.lojao.persistencia;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import br.upe.lojao.persistencia.entidades.Administrador;
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
 
 public class PersistenciaUsuario implements IPersistenciaUsuario{
 
@@ -8,8 +13,8 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
     private String caminhoFuncionario = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "funcionario.csv";
     private String caminhoAdministrador = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "administrador.csv";
 
-    ILerCSV lerCsv = new LerCSV<>();
-    IEscreverCSV escreverCsv = new EscreverCSV<>();
+    ILerCSV lerCsv = new LerCSV();
+    IEscreverCSV escreverCsv = new EscreverCSV();
 
     private ArrayList<Cliente> lerClientes() {
         return new ArrayList<>(lerCsv.ler(caminhoCliente, linha ->
@@ -218,5 +223,16 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
             }
         }
         return lista;
+    }
+    
+    public boolean clienteExiste(int id) {
+        boolean resultado = false;
+        ArrayList<Cliente> clientes = lerClientes();
+        for (int x = 0; x < clientes.size(); x++) {
+            if (clientes.get(x).id() == id) {
+                resultado = true;
+            }
+        }
+        return resultado;
     }
 }
