@@ -14,16 +14,10 @@ import br.upe.lojao.entidades.Produtos;
 import br.upe.lojao.persistencia.entidades.Categoria;
 import br.upe.lojao.persistencia.entidades.Fornecedor;
 
-public class LeituraProdutos {
+public class PersistenciaProdutos {
 
 	private String caminhoProduto = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "produtos.csv";
-	// depois de muitos erros eu agradeço a minha equipe por me mostrar essa linha.
 	
-	
-	// lembrar como fazer os leitores levou bastante tempo, honestamente isso aqui pareceu matematica
-	// eu não senti que tinha liberdade pra aplicar tecnicas ou que eu realmente entendo minhas ferramentas
-	// quando com deficiencia de calcio as galinhas podem comer seus proprios ovos
-	// pavões são galos comuns.
 	public ArrayList<Produtos> lerProduto() {
 		String cadaLinha;
 		ArrayList<Produtos> listaProdutos = new ArrayList<>(); // receberá cada produto
@@ -76,5 +70,5 @@ public class LeituraProdutos {
 		}
 	}
 	
-	// minhas funções de atualizar estão bem diferentes das da outra classe, espero não ter esquecido nada.
 }
+

@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.LeituraContratos;
-import br.upe.lojao.persistencia.LeituraProdutos;
+import br.upe.lojao.persistencia.PersistenciaProdutos;
 import br.upe.lojao.persistencia.LeituraUsuario;
 import br.upe.lojao.persistencia.Cliente;
 import br.upe.lojao.entidades.Produtos;
@@ -18,7 +18,7 @@ public class OperaçãoContrato implements Serviços {
 	private ArrayList<Contrato> listaContrato;
 	
 	private LeituraContratos leitorContrato = new LeituraContratos();
-	private LeituraProdutos leitorProduto = new LeituraProdutos();
+	private PersistenciaProdutos leitorProduto = new PersistenciaProdutos();
 	private LeituraUsuario leitorUsuario = new LeituraUsuario();
 	
 	public OperaçãoContrato() {
