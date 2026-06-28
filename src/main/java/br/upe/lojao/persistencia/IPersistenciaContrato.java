@@ -8,6 +8,7 @@ import br.upe.lojao.persistencia.entidades.Ocorrencias;
 public interface IPersistenciaContrato {
     ArrayList<Contrato> lerContratos();
     ArrayList<Ocorrencias> lerMultas();
+    void carregarDados();
     int maiorIdContrato();
     int maiorIdMulta();
     Contrato buscarContrato(int id);
@@ -17,10 +18,10 @@ public interface IPersistenciaContrato {
     boolean atualizarMultas(List<Ocorrencias> multas);
     boolean deletarContrato(int id);
     boolean itemContratoAtivo(int idItem);
-    boolean clienteMultaPendente(int idCliente);
-    boolean clienteHistorico(int idCliente);
+    List<Ocorrencias> clienteMultaPendente(int idCliente);
+    List<Contrato> clienteHistorico(int idCliente);
     List<Contrato> contratosAtrasados();
-    void recarregar();
+    List<Contrato> contratosClienteAtivos(int idCliente);
     Ocorrencias buscarMulta(int id);
     boolean adicionarMulta(Ocorrencias multa);
     boolean atualizarMulta(Ocorrencias multa);

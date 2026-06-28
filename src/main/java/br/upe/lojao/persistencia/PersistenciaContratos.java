@@ -23,7 +23,7 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         carregarDados();
     }
 
-    private void carregarDados() {
+    public void carregarDados() {
         this.listaContratos = leitor.ler(caminhoContrato, linha -> {
             int id = Integer.parseInt(linha[0]);
             int idCliente = Integer.parseInt(linha[1]);
@@ -51,10 +51,6 @@ public class PersistenciaContratos implements IPersistenciaContrato {
             String status = linha[9];
             return new Ocorrencias(id, idContrato, idCliente, valorBase, dataInicio, dataFinal, valorFinal, valorPorcentagem, avarias, status);
         });
-    }
-
-    public void recarregar() {
-        carregarDados();
     }
 
     private boolean escreverContratos() {
@@ -167,24 +163,26 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         return resultado;
     }
 
-    public boolean clienteMultaPendente(int idCliente) {
-    	boolean resultado = false;
+    public List<Ocorrencias> clienteMultaPendente(int idCliente) {
+    	List<Ocorrencias> multas = new ArrayList<>();
         for (int x = 0; x < this.listaMultas.size(); x++) {
             if (this.listaMultas.get(x).idCliente() == idCliente && !this.listaMultas.get(x).status().equals("PAGO")) {
-                resultado = true;
+                multas.add(this.listaMultas.get(x));
             }
         }
-        return resultado;
+     
+       return multas;
     }
 
-    public boolean clienteHistorico(int idCliente) {
-    	boolean resultado = false;
+    public List<Contrato> clienteHistorico(int idCliente) {
+    	List<Contrato> historico = new ArrayList<>();
         for (int x = 0; x < this.listaContratos.size(); x++) {
-            if (this.listaContratos.get(x).idCliente() == idCliente) {
-            	resultado = true;
+            if (this.listaContratos.get(x).idCliente() == idCliente && this.listaContratos.get(x).status().equals("CONCLUIDO") == true) {
+            	historico.add(this.listaContratos.get(x));
             }
         }
-        return resultado;
+      
+       return historico;
     }
 
     public List<Contrato> contratosAtrasados() {
@@ -195,6 +193,16 @@ public class PersistenciaContratos implements IPersistenciaContrato {
             }
         }
         return atrasados;
+    }
+    
+    public List<Contrato> contratosClienteAtivos(int idCliente){
+    	List<Contrato> ativos = new ArrayList<>();
+        for (int x = 0; x < this.listaContratos.size(); x++) {
+            if (this.listaContratos.get(x).idCliente() == idCliente && !this.listaContratos.get(x).status().equals("CONCLUIDO")) {
+                ativos.add(this.listaContratos.get(x));
+            }
+        }
+        return ativos;
     }
 
     public Ocorrencias buscarMulta(int id) {

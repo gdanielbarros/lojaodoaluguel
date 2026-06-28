@@ -2,6 +2,9 @@ package br.upe.lojao.ui;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import java.util.List;
 
 public class MenuCliente extends Menu{
 
@@ -18,7 +21,58 @@ public class MenuCliente extends Menu{
     protected void imprimirRespostaFacadeListaProdutos(int entrada){}
 
     @Override
-    protected void imprimirRespostaFacadeListaContrato(int entrada){}
+    protected void imprimirRespostaFacadeListaContrato(int entrada) {
+        if (entrada == 2) {
+            List<Contrato> ativos = facade.listarAtivos(this.id);
+            if (ativos.isEmpty()) {
+                System.out.println("Nenhum aluguel ativo.");
+            } else {
+                System.out.println("===========Alugueis Ativos===========");
+                for (int x = 0; x < ativos.size(); x++) {
+                    Contrato contrato = ativos.get(x);
+                    System.out.println("ID: " + contrato.id());
+                    System.out.println("Item: " + contrato.idItem());
+                    System.out.println("Inicio: " + contrato.dataInicio());
+                    System.out.println("Previsao devolucao: " + contrato.dataFinal());
+                    System.out.println("Valor total: " + contrato.valorTotal());
+                    System.out.println("Status: " + contrato.status());
+                    System.out.println("---------------------------------------");
+                }
+            }
+        } else if (entrada == 3) {
+            List<Ocorrencias> multas = facade.multasPendentes(this.id);
+            if (multas.isEmpty()) {
+                System.out.println("Nenhuma multa pendente.");
+            } else {
+                System.out.println("===========Multas Pendentes===========");
+                for (int x = 0; x < multas.size(); x++) {
+                    Ocorrencias multa = multas.get(x);
+                    System.out.println("ID: " + multa.id());
+                    System.out.println("Contrato: " + multa.idContrato());
+                    System.out.println("Valor: " + multa.valorFinal());
+                    System.out.println("Avarias: " + multa.avarias());
+                    System.out.println("Status: " + multa.status());
+                    System.out.println("---------------------------------------");
+                }
+            }
+        } else if (entrada == 4) {
+            List<Contrato> historico = facade.historicoCliente(this.id);
+            if (historico.isEmpty()) {
+                System.out.println("Nenhum historico encontrado.");
+            } else {
+                System.out.println("===========Historico===========");
+                for (int x = 0; x < historico.size(); x++) {
+                    Contrato contrato = historico.get(x);
+                    System.out.println("ID: " + contrato.id());
+                    System.out.println("Item: " + contrato.idItem());
+                    System.out.println("Inicio: " + contrato.dataInicio());
+                    System.out.println("Encerramento: " + contrato.dataFinal());
+                    System.out.println("Valor total: " + contrato.valorTotal());
+                    System.out.println("---------------------------------------");
+                }
+            }
+        }
+    }
 
     @Override
     protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado){
@@ -35,7 +89,7 @@ public class MenuCliente extends Menu{
             int opcao = scanner.nextInt();
             limparBuffer();
 
-            if(opcao == 1){imprimirRespostaFacadeListaContrato(opcao);}
+            if(opcao == 1){imprimirRespostaFacadeListaProdutos(opcao);}
 
             else if(opcao == 2){imprimirRespostaFacadeListaContrato(opcao);}
 

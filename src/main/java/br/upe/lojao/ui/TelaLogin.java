@@ -10,7 +10,7 @@ public class TelaLogin {
     protected String senha;
     protected String tipo;
     protected int id;
-    protected Facade facade;
+    protected Facade facade = new Facade();
     protected Scanner scanner = new Scanner(System.in);
     protected IOperacaoUsuario operacaoUsuario = new OperacaoUsuario();
 

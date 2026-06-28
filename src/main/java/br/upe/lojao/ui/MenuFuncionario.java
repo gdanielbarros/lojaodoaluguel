@@ -8,16 +8,16 @@ public class MenuFuncionario extends Menu{
     protected void imprimirRespostaFacadeListaProdutos(int entrada){}
 
     @Override
-    protected void imprimirRespostaFacadeString(int entrada){}
+    protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado){}
 
     @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada){}
 
     @Override
     public void receberValidarEntradas(){
-        System.out.printf("===================Funcionario===================%n 1 - Registrar novo aluguel%n 2 - Processar devolução%n 3 - Aplicar multa%n 4 - Cadastrar cliente%n 5 - Emitir relatorio operacional%  0 - Sair");
+        System.out.printf("===================Funcionario===================%n 1 - Registrar novo aluguel%n 2 - Processar devolução%n %n 3 - Cadastrar cliente%n 4 - Emitir relatorio operacional%  0 - Sair");
         try{
-            opcao = scanner.nextInt();
+            int opcao = scanner.nextInt();
             if(opcao == 1){}
 
             else if(opcao == 2){}
@@ -25,8 +25,6 @@ public class MenuFuncionario extends Menu{
             else if(opcao == 3){}
 
             else if(opcao == 4){}
-
-            else if(opcao == 5){}
 
             else if(opcao == 0){}
         }catch(Exception e){}

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 
 public interface IOperacaoContrato {
 
@@ -18,4 +19,7 @@ public interface IOperacaoContrato {
     boolean deletarContrato(int idContrato);
     Contrato buscarContrato(int idContrato);
     List<Contrato> listarTodos();
+    List<Contrato> listarAtivos(int idCliente);
+    List<Ocorrencias> multasPendentes(int idCliente);
+    List<Contrato> historicoCliente(int idCliente);
 }

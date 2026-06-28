@@ -3,17 +3,21 @@ package br.upe.lojao.negocios;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import br.upe.lojao.persistencia.IPersistenciaContrato;
 import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaContratos;
+import br.upe.lojao.persistencia.PersistenciaProdutos;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
 
 public class OperacaoContrato implements IOperacaoContrato {
 
     private IPersistenciaContrato persistencia = new PersistenciaContratos();
-
+    private IPersistenciaUsuario persistenciaUsuario = new PersistenciaUsuario();
+    
     public int gerarId() {
         return persistencia.maiorIdContrato() + 1;
     }
@@ -31,7 +35,7 @@ public class OperacaoContrato implements IOperacaoContrato {
     }
 
     public BigDecimal calcularAluguel(long dias, int idProduto) {
-        IPersistenciaProduto persistenciaProduto = new PersistenciaProduto();
+        IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
         BigDecimal taxaDiaria = persistenciaProduto.getTaxaDiaria(idProduto);
         return taxaDiaria.multiply(new BigDecimal(dias));
     }
@@ -44,7 +48,7 @@ public class OperacaoContrato implements IOperacaoContrato {
             operacaoMultas.aplicarMulta(atrasados.get(x).id());
         }
         }
-        persistencia.recarregar();
+        persistencia.carregarDados();
 
         for (int x = 0; x < atrasados.size(); x++) {
             Contrato atualizado = new Contrato(
@@ -58,7 +62,7 @@ public class OperacaoContrato implements IOperacaoContrato {
     	if (persistencia.itemContratoAtivo(idProduto)) {
         	permissao = false;
         	}
-        if (persistencia.clienteMultaPendente(idCliente)) {
+        if (persistencia.clienteMultaPendente(idCliente).isEmpty() == true) {
         	permissao = false;
         }
         if (dataInicio.isAfter(dataFinal)) {
@@ -85,7 +89,7 @@ public class OperacaoContrato implements IOperacaoContrato {
 
         Contrato atualizado;
         if (opcao == 1) {
-            IPersistenciaUsuario persistenciaUsuario = new PersistenciaUsuario();
+            
             if (persistenciaUsuario.clienteExiste(valor) == false) {
             	permissao = false;
             }
@@ -94,7 +98,7 @@ public class OperacaoContrato implements IOperacaoContrato {
             if (persistencia.itemContratoAtivo(valor)) {
             	permissao = false;
             }
-            IPersistenciaProduto persistenciaProduto = new PersistenciaProduto();
+            IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
             if (persistenciaProduto.produtoExiste(valor) == false) {
             	permissao = false;
             }
@@ -167,8 +171,12 @@ public class OperacaoContrato implements IOperacaoContrato {
     }
 
     public boolean deletarContrato(int idContrato) {
-        if (!verificarExclusao(idContrato)) return false;
-        return persistencia.deletarContrato(idContrato);
+    	boolean resultado;
+        if (verificarExclusao(idContrato) == false) {
+        	resultado = false;
+        }
+        resultado = persistencia.deletarContrato(idContrato);
+        return resultado;
     }
 
     public Contrato buscarContrato(int idContrato) {
@@ -177,5 +185,32 @@ public class OperacaoContrato implements IOperacaoContrato {
 
     public List<Contrato> listarTodos() {
         return persistencia.lerContratos();
+    }
+    
+    public List<Contrato> listarAtivos(int idCliente){
+    	List<Contrato> contratosCliente = new ArrayList<>();
+    	
+        if (persistenciaUsuario.clienteExiste(idCliente) == true) {
+        	contratosCliente = persistencia.contratosClienteAtivos(idCliente);
+        }
+    	return contratosCliente;
+    }
+    
+    public List<Ocorrencias> multasPendentes(int idCliente){
+    	List<Ocorrencias> multasCliente = new ArrayList<>();
+    	
+        if (persistenciaUsuario.clienteExiste(idCliente) == true) {
+        	multasCliente = persistencia.clienteMultaPendente(idCliente);
+        }
+    	return multasCliente;
+    }
+    
+    public List<Contrato> historicoCliente(int idCliente){
+    	List<Contrato> historico = new ArrayList<>();
+    	
+        if (persistenciaUsuario.clienteExiste(idCliente) == true) {
+        	historico = persistencia.clienteHistorico(idCliente);
+        }
+    	return historico;
     }
 }

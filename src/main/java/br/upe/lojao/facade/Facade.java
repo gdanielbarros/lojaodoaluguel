@@ -8,12 +8,18 @@ import br.upe.lojao.persistencia.PersistenciaUsuario;
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.negocios.OperacaoContrato;
+import br.upe.lojao.negocios.IOperacaoContrato;
+import br.upe.lojao.persistencia.entidades.Contrato;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Facade {
     private OperacaoUsuario operacaoUsuario = new OperacaoUsuario();
+    private IOperacaoContrato operacaoContrato = new OperacaoContrato();
     private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
     private MenuCliente menucliente = new MenuCliente();
     private MenuFuncionario menufuncionario = new MenuFuncionario();
@@ -78,6 +84,18 @@ public class Facade {
 
     public void receberValidarEntradaCliente(){
         menucliente.receberValidarEntradas();
+    }
+    
+    public List<Contrato> listarAtivos(int idCliente) {
+        return operacaoContrato.listarAtivos(idCliente);
+    }
+
+    public List<Ocorrencias> multasPendentes(int idCliente) {
+        return operacaoContrato.multasPendentes(idCliente);
+    }
+
+    public List<Contrato> historicoCliente(int idCliente) {
+        return operacaoContrato.historicoCliente(idCliente);
     }
 
 }
