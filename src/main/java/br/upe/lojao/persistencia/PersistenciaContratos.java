@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.math.BigDecimal;
 
-public class LeituraContratos {
+public class PersistenciaContratos implements IPersistenciaContratos {
 
 	private String caminhoContrato = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "contratos.csv";
 	private String caminhoMultas = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "ocorrencias.csv";

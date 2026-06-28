@@ -4,27 +4,69 @@ import java.util.ArrayList;
 
 public class PersistenciaUsuario implements IPersistenciaUsuario{
 
-    ILeituraUsuario leituraUsuario = new LeituraUsuario();
-    IEscreverUsuario escreverUsuario = new EscreverUsuario();
+    private String caminhoCliente = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "cliente.csv";
+    private String caminhoFuncionario = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "funcionario.csv";
+    private String caminhoAdministrador = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "administrador.csv";
+
+    ILerCSV lerCsv = new LerCSV<>();
+    IEscreverCSV escreverCsv = new EscreverCSV<>();
+
+    private ArrayList<Cliente> lerClientes() {
+        return new ArrayList<>(lerCsv.ler(caminhoCliente, linha ->
+            new Cliente(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Cliente",
+                linha[4], linha[5], linha[6], Boolean.parseBoolean(linha[7]), Boolean.parseBoolean(linha[8]))
+        ));
+    }
+
+    private ArrayList<Funcionario> lerFuncionarios() {
+        return new ArrayList<>(lerCsv.ler(caminhoFuncionario, linha ->
+            new Funcionario(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Funcionario",
+                linha[4], linha[5], linha[6], Boolean.parseBoolean(linha[7]))
+        ));
+    }
+
+    private ArrayList<Administrador> lerAdministradores() {
+        return new ArrayList<>(lerCsv.ler(caminhoAdministrador, linha ->
+            new Administrador(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Administrador", linha[4])
+        ));
+    }
+
+    private boolean escreverClientes(ArrayList<Cliente> lista) {
+        return escreverCsv.escrever(caminhoCliente,
+            new String[]{"id","nome","login","senha","email","telefone","cpf","statusMulta","statusContrato"},
+            lista,
+            c -> new String[]{ String.valueOf(c.id()), c.nome(), c.login(), c.senha(),
+                c.email(), c.telefone(), c.cpf(), String.valueOf(c.statusMulta()), String.valueOf(c.statusContrato()) }
+        );
+    }
+
+    private boolean escreverFuncionarios(ArrayList<Funcionario> lista) {
+        return escreverCsv.escrever(caminhoFuncionario,
+            new String[]{"id","nome","login","senha","email","telefone","cpf","statusContrato"},
+            lista,
+            f -> new String[]{ String.valueOf(f.id()), f.nome(), f.login(), f.senha(),
+                f.email(), f.telefone(), f.cpf(), String.valueOf(f.statusContrato()) }
+        );
+    }
 
     public int autenticarUsuario(String login, String senha, String tipo) {
         int resposta = -1;
         if (tipo.equalsIgnoreCase("cliente")) {
-            ArrayList<Cliente> clientes = leituraUsuario.lerCliente();
+            ArrayList<Cliente> clientes = lerClientes();
             for (Cliente c : clientes) {
                 if (login.equals(c.login()) && senha.equals(c.senha())) {
                     resposta = c.id();
                 }
             }
         } else if (tipo.equalsIgnoreCase("funcionario")) {
-            ArrayList<Funcionario> funcionarios = leituraUsuario.lerFuncionario();
+            ArrayList<Funcionario> funcionarios = lerFuncionarios();
             for (Funcionario f : funcionarios) {
                 if (login.equals(f.login()) && senha.equals(f.senha())) {
                     resposta = f.id();
                 }
             }
         } else if (tipo.equalsIgnoreCase("administrador")) {
-            ArrayList<Administrador> administradores = leituraUsuario.lerAdministrador();
+            ArrayList<Administrador> administradores = lerAdministradores();
             for (Administrador a : administradores) {
                 if (login.equals(a.login()) && senha.equals(a.senha())) {
                     resposta = a.id();
@@ -36,12 +78,12 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
 
     public String cadastrarCliente(Cliente cliente) {
         String resposta = "Erro ao salvar os dados!";
-        ArrayList<Cliente> lista = leituraUsuario.lerCliente();
+        ArrayList<Cliente> lista = lerClientes();
         if (lista.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
         lista.add(cliente);
-        if(escreverUsuario.escreverCliente(lista)){
+        if(escreverClientes(lista)){
             resposta = "Salvo com sucesso";
         }
         return resposta;
@@ -49,7 +91,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
 
     public boolean atualizarCliente(int id, int opcao, String dadoModificado) {
         boolean resposta = false;
-        ArrayList<Cliente> clientes = leituraUsuario.lerCliente();
+        ArrayList<Cliente> clientes = lerClientes();
         for(int i=0 ; i < clientes.size() ; i++){
             Cliente c = clientes.get(i);
 
@@ -66,10 +108,9 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
                     default -> c;
                 };
                 clientes.set(i, atualizado);
-                if(escreverUsuario.escreverCliente(clientes)){
+                if(escreverClientes(clientes)){
                     resposta = true;
                 }
-
             }
         }
         return resposta;
@@ -77,7 +118,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
 
     public String deletarCliente(int id) {
         String resposta = "Id nao encontrado";
-        ArrayList<Cliente> clientes = leituraUsuario.lerCliente();
+        ArrayList<Cliente> clientes = lerClientes();
         if (clientes.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
@@ -85,7 +126,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
             Cliente c = clientes.get(i);
             if (c.id() == id) {
                 clientes.remove(i);
-                if (escreverUsuario.escreverCliente(clientes)) {
+                if (escreverClientes(clientes)) {
                     resposta = "Deletado com sucesso";
                 }
             }
@@ -94,7 +135,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
     }
 
     public ArrayList<Cliente> buscarCliente(String nome) {
-        ArrayList<Cliente> clientes = leituraUsuario.lerCliente();
+        ArrayList<Cliente> clientes = lerClientes();
         ArrayList<Cliente> lista = new ArrayList<>();
         if (clientes.size() == 0) {
             Cliente c = new Cliente(-1, "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", false, false);
@@ -110,21 +151,20 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
 
     public String cadastrarFuncionario(Funcionario contratado) {
         String resposta = "Erro ao salvar informações";
-        ArrayList<Funcionario> lista = leituraUsuario.lerFuncionario();
+        ArrayList<Funcionario> lista = lerFuncionarios();
         if (lista.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
         lista.add(contratado);
-        if (escreverUsuario.escreverFuncionario(lista)) {
+        if (escreverFuncionarios(lista)) {
             resposta = "Cadastrado com sucesso";
         }
         return resposta;
     }
 
-
     public boolean atualizarFuncionario(int id, int opcao, String dadoModificado) {
         boolean resposta = false;
-        ArrayList<Funcionario> funcionarios = leituraUsuario.lerFuncionario();
+        ArrayList<Funcionario> funcionarios = lerFuncionarios();
         for (int i = 0; i < funcionarios.size(); i++) {
             Funcionario f = funcionarios.get(i);
 
@@ -139,7 +179,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
                     default -> f;
                 };
                 funcionarios.set(i, atualizado);
-                if(escreverUsuario.escreverFuncionario(funcionarios)){
+                if(escreverFuncionarios(funcionarios)){
                     resposta = true;
                 }
             }
@@ -147,10 +187,9 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
         return resposta;
     }
 
-
     public String deletarFuncionario(int id) {
         String resposta = "Id nao encontrado";
-        ArrayList<Funcionario> funcionarios = leituraUsuario.lerFuncionario();
+        ArrayList<Funcionario> funcionarios = lerFuncionarios();
         if (funcionarios.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
@@ -158,7 +197,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
             Funcionario f = funcionarios.get(i);
             if (f.id() == id) {
                 funcionarios.remove(i);
-                if (escreverUsuario.escreverFuncionario(funcionarios)) {
+                if (escreverFuncionarios(funcionarios)) {
                     resposta ="Deletado com sucesso";
                 }
             }
@@ -167,7 +206,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
     }
 
     public ArrayList<Funcionario> buscarFuncionario(String nome) {
-        ArrayList<Funcionario> funcionarios = leituraUsuario.lerFuncionario();
+        ArrayList<Funcionario> funcionarios = lerFuncionarios();
         ArrayList<Funcionario> lista = new ArrayList<>();
         if (funcionarios.size() == 0) {
             Funcionario f = new Funcionario(-1, "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", "ERRO", false);
@@ -180,5 +219,4 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
         }
         return lista;
     }
-
 }
