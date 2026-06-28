@@ -5,9 +5,9 @@ import br.upe.lojao.ui.MenuCliente;
 import br.upe.lojao.ui.MenuFuncionario;
 import br.upe.lojao.negocios.OperacaoUsuario;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
-import br.upe.lojao.persistencia.Administrador;
-import br.upe.lojao.persistencia.Cliente;
-import br.upe.lojao.persistencia.Funcionario;
+import br.upe.lojao.persistencia.entidades.Administrador;
+import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;

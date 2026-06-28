@@ -1,283 +1,185 @@
 package br.upe.lojao.negocios;
-import java.util.ArrayList;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
-import java.util.List;
+import br.upe.lojao.persistencia.IPersistenciaContrato;
 import br.upe.lojao.persistencia.PersistenciaContratos;
 
-public class OperacaoMultas implements Serviços {
+public class OperacaoMultas implements IOperacaoMultas {
 
-	private ArrayList<Contrato> listaContrato;
-	private ArrayList<Ocorrencias> listaOcorrencias;
-	private PersistenciaContratos leitor = new PersistenciaContratos();
-	
-	public OperacaoMultas() {
-		
-		this.listaContrato = this.leitor.lerContratos();
-		this.listaOcorrencias = this.leitor.lerMultas();
-		
-	}
-	
-	@Override
-	public int gerarId() {
-		if (listaOcorrencias.isEmpty() == true){
-			return 1;
-		}
-		else {
-			int maiorTemp = 0;
-			for (int x = 0; x < listaOcorrencias.size(); x++) {
-				if (maiorTemp < listaOcorrencias.get(x).id()) {
-					maiorTemp = listaOcorrencias.get(x).id();
-				}
-			}
-			int idGerado = maiorTemp + 1;
-			return idGerado;
-		}
-	}
-	
-	@Override
-	public boolean verificarExclusão(int idMulta) {
-		
-		
-		if (listaOcorrencias.isEmpty() == true){
-			return false;
-		}
-		
-		int indiceMulta = encontrarNaLista(idMulta, 1);
-		
-		if (listaOcorrencias.get(indiceMulta).status().equals("PAGO")) {
-			return true;
-		}
-		else {
-			return false;
-		}
-		
-	}
-	
-	public boolean verificarLeitura(int lista) {
-		if (lista == 1) {
-			if (listaContrato.isEmpty() == true || listaContrato.get(0).id() == -1) {
-				return false;
-			}
-			else {
-				return true;
-			}
-		}
-		if (lista == 2) {
-			if (listaOcorrencias.isEmpty() == true || listaOcorrencias.get(0).id() == -1) {
-				return false;
-			}
-			else {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public int encontrarNaLista(int id, int opcao) {
-		int indice = -1;
-		
-		if (opcao == 1){
-			for (int x = 0; x < listaOcorrencias.size(); x++) {
-				if (id == listaOcorrencias.get(x).id()){
-					indice = x;
-					return indice;
-				}
-				}
-			}
-		
-		else if (opcao == 2){
-			for (int x = 0; x < listaContrato.size(); x++) {
-				if (id == listaContrato.get(x).id()){
-					indice = x;
-					return indice;
-				}
-			}
-		}
-		return indice;
-	}
-	
-	public BigDecimal calcularMulta(int idContrato) {
-		
-		int indiceContrato = encontrarNaLista(idContrato, 2);
-		BigDecimal taxaProduto = listaContrato.get(indiceContrato).valorTotal().divide(new BigDecimal(listaContrato.get(indiceContrato).diasAlugados()));
-		
-		LocalDateTime dataFinal = listaContrato.get(indiceContrato).dataFinal();
-		LocalDateTime dataAtual = LocalDateTime.now();
-		long dias = Duration.between(dataFinal, dataAtual).toDays();
-		
-		if (dias <= 0) {
-			return new BigDecimal("0");
-		}
-		
-		BigDecimal multaDaTaxa = taxaProduto.multiply(new BigDecimal("0.10"));
-		BigDecimal multa = multaDaTaxa.multiply(new BigDecimal(dias));
-		multa = multa.add(new BigDecimal("20"));
+    private IPersistenciaContrato persistencia = new PersistenciaContratos();
 
-		return multa;
-		
-	}
-	
-	public boolean aplicarMulta(int idContrato) {
-		
-		if (verificarLeitura(1) == false) {
-			return false;
-		}
-		if (verificarLeitura(2) == false) {
-			return false;
-		}
-		int indiceContrato = encontrarNaLista(idContrato, 2);
-		if (indiceContrato == -1) {
-			return false;
-		}
-		
-		int indiceMulta = encontrarNaLista(listaContrato.get(indiceContrato).idMulta(), 1);
-		if (indiceMulta == -1) {
-			return false;
-		}
-		
-		int idMulta = listaContrato.get(indiceContrato).idMulta();
-		BigDecimal multa = calcularMulta(idContrato);
-		BigDecimal zero = new BigDecimal("0");
-		if (idMulta == 0 && multa.compareTo(zero) > 0) {
-			idMulta = gerarId();
-		}
-		Contrato contratoNovaMulta = new Contrato(listaContrato.get(indiceContrato).id(), listaContrato.get(indiceContrato).idCliente(), listaContrato.get(indiceContrato).dataInicio(), listaContrato.get(indiceContrato).dataFinal(), listaContrato.get(indiceContrato).diasAlugados(), listaContrato.get(indiceContrato).valorTotal(), listaContrato.get(indiceContrato).idItem(), listaContrato.get(indiceContrato).status(), idMulta, multa);
-		Ocorrencias multaAtualizada = new Ocorrencias(idMulta, listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), multa, listaOcorrencias.get(indiceMulta).valorPorcentagem(), listaOcorrencias.get(indiceMulta).avarias(), listaOcorrencias.get(indiceMulta).status());
-		
-		this.listaContrato.remove(indiceContrato);
-		this.listaOcorrencias.remove(indiceMulta);
-		
-		this.listaContrato.add(indiceContrato, contratoNovaMulta);
-		this.listaOcorrencias.add(indiceMulta, multaAtualizada);
-		
-		boolean novoContrato = this.leitor.atualizarContratos(listaContrato);
-		boolean novaMulta = this.leitor.atualizarMultas(listaOcorrencias);
-	
-		if (novoContrato == false || novaMulta == false) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean marcarPago(int idMulta) {
-	    if (verificarLeitura(2) == false) {return false;}
-	    int indiceMulta = encontrarNaLista(idMulta, 1);
-	    if (indiceMulta == -1) {return false;}
+    public int gerarId() {
+        int novoId = persistencia.maiorIdMulta() + 1;
+        return novoId;
+    }
 
-	    Ocorrencias multaPaga = new Ocorrencias(listaOcorrencias.get(indiceMulta).id(), listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), listaOcorrencias.get(indiceMulta).valorFinal(), listaOcorrencias.get(indiceMulta).valorPorcentagem(), listaOcorrencias.get(indiceMulta).avarias(), "PAGO");
-	    listaOcorrencias.remove(indiceMulta);
-	    listaOcorrencias.add(indiceMulta, multaPaga);
-	    this.leitor.atualizarMultas(listaOcorrencias);
-	    return true;
-	}
-	
-	public boolean deletarMulta(int idMulta) {
-		
-		if (verificarLeitura(1) == false) {
-			return false;
-		}
-		if (verificarLeitura(2) == false) {
-			return false;
-		}
-		
-		int indiceMulta = encontrarNaLista(idMulta, 1);
-		if (indiceMulta == -1) {
-			return false;
-		}
-		int indiceContrato = encontrarNaLista(listaOcorrencias.get(indiceMulta).idContrato(), 2);
-		
-		if (indiceContrato == -1) {
-			return false;
-		}
-		
-		if (verificarExclusão(idMulta) == false) {
-			return false;
-		}
-		
-		Contrato contratoNovaMulta = new Contrato(listaContrato.get(indiceContrato).id(), listaContrato.get(indiceContrato).idCliente(), listaContrato.get(indiceContrato).dataInicio(), listaContrato.get(indiceContrato).dataFinal(), listaContrato.get(indiceContrato).diasAlugados(), listaContrato.get(indiceContrato).valorTotal(), listaContrato.get(indiceContrato).idItem(), listaContrato.get(indiceContrato).status(), listaContrato.get(indiceContrato).idMulta(), new BigDecimal("0"));
-		this.listaOcorrencias.remove(indiceMulta);
-		this.listaContrato.remove(indiceContrato);
-		this.listaContrato.add(indiceContrato, contratoNovaMulta);
-		
-		boolean novoContrato = this.leitor.atualizarContratos(listaContrato);
-		boolean novaMulta = this.leitor.atualizarMultas(listaOcorrencias);
-	
-		if (novoContrato == false || novaMulta == false) {
-			return false;
-		}
-		return true;
-		
-		
-	}
-	
-	public boolean registrarAvaria(int idMulta, String avaria) {
-		if (verificarLeitura(2) == false) {
-			return false;
-		
-		}
-	
-		int indiceMulta = encontrarNaLista(idMulta, 1);
-		
-		if (indiceMulta == -1) {
-			return false;
-		}
-		
-		Ocorrencias novaAvaria = new Ocorrencias(listaOcorrencias.get(indiceMulta).id(), listaOcorrencias.get(indiceMulta).idContrato(), listaOcorrencias.get(indiceMulta).idCliente(), listaOcorrencias.get(indiceMulta).valorBase(), listaOcorrencias.get(indiceMulta).dataInicio(), listaOcorrencias.get(indiceMulta).dataFinal(), listaOcorrencias.get(indiceMulta).valorFinal(), listaOcorrencias.get(indiceMulta).valorPorcentagem(), avaria, listaOcorrencias.get(indiceMulta).status());
-	
-		listaOcorrencias.remove(indiceMulta);
-		listaOcorrencias.add(indiceMulta, novaAvaria);
-		
-		boolean novaMulta = this.leitor.atualizarMultas(listaOcorrencias);
-		
-		if (novaMulta == false) {
-			return false;
-		}
-		return true;
-		
-	}
-	
-	public List<Ocorrencias> multasPendentes () {
-		if (verificarLeitura(2) == false) {
-			ArrayList<Ocorrencias> listaMultasErro = new ArrayList<>();
-	        Ocorrencias unico = new Ocorrencias(-1, -1, -1, BigDecimal.ZERO, LocalDateTime.MIN, LocalDateTime.MIN, BigDecimal.ZERO, BigDecimal.ZERO, "ERRO", "ERRO");
-	        listaMultasErro.add(unico);
-	        return listaMultasErro;
-		}
-		ArrayList<Ocorrencias> multasPendentes = new ArrayList<>();
-		
-		for (int x = 0; x < listaOcorrencias.size(); x++) {
-			if (listaOcorrencias.get(x).status().equals("Pendente")){
-				multasPendentes.add(listaOcorrencias.get(x));
-			}
-		}
-		
-		return multasPendentes;
-		
-	}
-	
-	public List<Ocorrencias> buscarMultaCliente(int idCliente){
-		if (verificarLeitura(2) == false) {
-			ArrayList<Ocorrencias> listaMultasErro = new ArrayList<>();
-	        Ocorrencias unico = new Ocorrencias(-1, -1, -1, BigDecimal.ZERO, LocalDateTime.MIN, LocalDateTime.MIN, BigDecimal.ZERO, BigDecimal.ZERO, "ERRO", "ERRO");
-	        listaMultasErro.add(unico);
-	        return listaMultasErro;
-		}
-		
-		ArrayList<Ocorrencias> multasCliente = new ArrayList<>();
-		
-		for (int x = 0; x < listaOcorrencias.size(); x++) {
-			
-			if (listaOcorrencias.get(x).idCliente() == idCliente) {
-				multasCliente.add(listaOcorrencias.get(x));
-			}
-			
-		}
-		return multasCliente;
-		
-	}
-	
+    public boolean verificarExclusão(int idMulta) {
+        boolean resultado = false;
+        Ocorrencias multa = persistencia.buscarMulta(idMulta);
+        if (multa.id() != -1) {
+            resultado = multa.status().equals("PAGO");
+        }
+        return resultado;
+    }
+
+    public BigDecimal calcularMulta(int idContrato) {
+        BigDecimal resultado = new BigDecimal("0");
+        Contrato contrato = persistencia.buscarContrato(idContrato);
+
+        if (contrato.id() != -1) {
+            BigDecimal taxaDiaria = contrato.valorTotal().divide(new BigDecimal(contrato.diasAlugados()));
+            long diasAtraso = Duration.between(contrato.dataFinal(), LocalDateTime.now()).toDays();
+
+            if (diasAtraso > 0) {
+                BigDecimal percentualDiario = taxaDiaria.multiply(new BigDecimal("0.10"));
+                BigDecimal totalPercentual = percentualDiario.multiply(new BigDecimal(diasAtraso));
+                resultado = totalPercentual.add(new BigDecimal("20"));
+            }
+        }
+
+        return resultado;
+    }
+
+    public boolean aplicarMulta(int idContrato) {
+        boolean resultado = false;
+        Contrato contrato = persistencia.buscarContrato(idContrato);
+
+        if (contrato.id() != -1) {
+            BigDecimal valorMulta = calcularMulta(idContrato);
+            BigDecimal zero = new BigDecimal("0");
+
+            if (valorMulta.compareTo(zero) > 0) {
+                int idMulta = contrato.idMulta();
+                if (idMulta == 0) {
+                    idMulta = gerarId();
+                }
+
+                Contrato contratoAtualizado = new Contrato(
+                    contrato.id(), contrato.idCliente(), contrato.dataInicio(), contrato.dataFinal(),
+                    contrato.diasAlugados(), contrato.valorTotal(), contrato.idItem(),
+                    contrato.status(), idMulta, valorMulta
+                );
+
+                Ocorrencias multaExistente = persistencia.buscarMulta(idMulta);
+
+                if (multaExistente.id() == -1) {
+                    Ocorrencias novaMulta = new Ocorrencias(
+                        idMulta, idContrato, contrato.idCliente(),
+                        contrato.valorTotal(), contrato.dataInicio(), contrato.dataFinal(),
+                        valorMulta, new BigDecimal("0.10"), "", "PENDENTE"
+                    );
+                    boolean contratoSalvo = persistencia.atualizarContrato(contratoAtualizado);
+                    boolean multaSalva = persistencia.adicionarMulta(novaMulta);
+                    resultado = contratoSalvo && multaSalva;
+                } else {
+                    Ocorrencias multaAtualizada = new Ocorrencias(
+                        multaExistente.id(), multaExistente.idContrato(), multaExistente.idCliente(),
+                        multaExistente.valorBase(), multaExistente.dataInicio(), multaExistente.dataFinal(),
+                        valorMulta, multaExistente.valorPorcentagem(), multaExistente.avarias(), multaExistente.status()
+                    );
+                    boolean contratoSalvo = persistencia.atualizarContrato(contratoAtualizado);
+                    boolean multaSalva = persistencia.atualizarMulta(multaAtualizada);
+                    resultado = contratoSalvo && multaSalva;
+                }
+            }
+        }
+
+        return resultado;
+    }
+
+    public boolean marcarPago(int idMulta) {
+        boolean resultado = false;
+        Ocorrencias multa = persistencia.buscarMulta(idMulta);
+
+        if (multa.id() != -1) {
+            Ocorrencias multaPaga = new Ocorrencias(
+                multa.id(), multa.idContrato(), multa.idCliente(),
+                multa.valorBase(), multa.dataInicio(), multa.dataFinal(),
+                multa.valorFinal(), multa.valorPorcentagem(), multa.avarias(), "PAGO"
+            );
+            resultado = persistencia.atualizarMulta(multaPaga);
+        }
+
+        return resultado;
+    }
+
+    public boolean deletarMulta(int idMulta) {
+        boolean resultado = false;
+
+        if (verificarExclusão(idMulta)) {
+            Ocorrencias multa = persistencia.buscarMulta(idMulta);
+            Contrato contrato = persistencia.buscarContrato(multa.idContrato());
+
+            if (contrato.id() != -1) {
+                Contrato contratoSemMulta = new Contrato(
+                    contrato.id(), contrato.idCliente(), contrato.dataInicio(), contrato.dataFinal(),
+                    contrato.diasAlugados(), contrato.valorTotal(), contrato.idItem(),
+                    contrato.status(), 0, new BigDecimal("0")
+                );
+                boolean contratoSalvo = persistencia.atualizarContrato(contratoSemMulta);
+                boolean multaDeletada = persistencia.deletarMulta(idMulta);
+                resultado = contratoSalvo && multaDeletada;
+            }
+        }
+
+        return resultado;
+    }
+
+    public boolean registrarAvaria(int idMulta, String avaria) {
+        boolean resultado = false;
+        Ocorrencias multa = persistencia.buscarMulta(idMulta);
+
+        if (multa.id() != -1) {
+            Ocorrencias multaComAvaria = new Ocorrencias(
+                multa.id(), multa.idContrato(), multa.idCliente(),
+                multa.valorBase(), multa.dataInicio(), multa.dataFinal(),
+                multa.valorFinal(), multa.valorPorcentagem(), avaria, multa.status()
+            );
+            resultado = persistencia.atualizarMulta(multaComAvaria);
+        }
+
+        return resultado;
+    }
+
+    public List<Ocorrencias> multasPendentes() {
+        ArrayList<Ocorrencias> multasPendentes = new ArrayList<>();
+        ArrayList<Ocorrencias> todasMultas = persistencia.lerMultas();
+
+        if (todasMultas.isEmpty() || todasMultas.get(0).id() == -1) {
+            Ocorrencias erro = new Ocorrencias(-1, -1, -1, BigDecimal.ZERO, LocalDateTime.MIN, LocalDateTime.MIN, BigDecimal.ZERO, BigDecimal.ZERO, "ERRO", "ERRO");
+            multasPendentes.add(erro);
+        } else {
+            for (int x = 0; x < todasMultas.size(); x++) {
+                if (todasMultas.get(x).status().equals("PENDENTE")) {
+                    multasPendentes.add(todasMultas.get(x));
+                }
+            }
+        }
+
+        return multasPendentes;
+    }
+
+    public List<Ocorrencias> buscarMultaCliente(int idCliente) {
+        ArrayList<Ocorrencias> multasDoCliente = new ArrayList<>();
+        ArrayList<Ocorrencias> todasMultas = persistencia.lerMultas();
+
+        if (todasMultas.isEmpty() || todasMultas.get(0).id() == -1) {
+            Ocorrencias erro = new Ocorrencias(-1, -1, -1, BigDecimal.ZERO, LocalDateTime.MIN, LocalDateTime.MIN, BigDecimal.ZERO, BigDecimal.ZERO, "ERRO", "ERRO");
+            multasDoCliente.add(erro);
+        } else {
+            for (int x = 0; x < todasMultas.size(); x++) {
+                if (todasMultas.get(x).idCliente() == idCliente) {
+                    multasDoCliente.add(todasMultas.get(x));
+                }
+            }
+        }
+
+        return multasDoCliente;
+    }
 }
