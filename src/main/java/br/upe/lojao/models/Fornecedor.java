@@ -29,7 +29,7 @@ public class Fornecedor {
 	    return this.telefone;
 	}
 	
-	public String getNome() {
+	public String{
 	    return this.nome;
 	}
 	
