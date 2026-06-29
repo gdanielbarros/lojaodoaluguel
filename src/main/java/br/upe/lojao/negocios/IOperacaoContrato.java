@@ -22,4 +22,5 @@ public interface IOperacaoContrato {
     List<Contrato> listarAtivos(int idCliente);
     List<Ocorrencias> multasPendentes(int idCliente);
     List<Contrato> historicoCliente(int idCliente);
+    List<Contrato> listarContratosCliente(int idCliente);
 }

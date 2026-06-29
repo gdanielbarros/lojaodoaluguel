@@ -213,4 +213,11 @@ public class OperacaoContrato implements IOperacaoContrato {
         }
     	return historico;
     }
+    
+    public List<Contrato> listarContratosCliente(int idCliente) {
+        List<Contrato> todosContratos = new ArrayList<>();
+        todosContratos.addAll(persistencia.contratosClienteAtivos(idCliente));
+        todosContratos.addAll(persistencia.clienteHistorico(idCliente));
+        return todosContratos;
+    }
 }

@@ -12,13 +12,17 @@ import br.upe.lojao.negocios.OperacaoContrato;
 import br.upe.lojao.negocios.IOperacaoContrato;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.negocios.OperacaoMultas;
+import br.upe.lojao.negocios.IOperacaoMultas;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Facade {
     private OperacaoUsuario operacaoUsuario = new OperacaoUsuario();
+    private IOperacaoMultas operacaoMultas = new OperacaoMultas();
     private IOperacaoContrato operacaoContrato = new OperacaoContrato();
     private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
     private MenuCliente menucliente = new MenuCliente();
@@ -96,6 +100,38 @@ public class Facade {
 
     public List<Contrato> historicoCliente(int idCliente) {
         return operacaoContrato.historicoCliente(idCliente);
+    }
+    
+    public boolean registrarAluguel(int idProduto, LocalDateTime dataInicio, LocalDateTime dataFinal, int idCliente) {
+        return operacaoContrato.registrar(idProduto, dataInicio, dataFinal, idCliente);
+    }
+
+    public boolean processarDevolucao(int idContrato) {
+        return operacaoContrato.concluir(idContrato);
+    }
+
+    public List<Contrato> listarTodosContratos() {
+        return operacaoContrato.listarTodos();
+    }
+
+    public List<Contrato> contratosClienteEspecifico(int idCliente) {
+        return operacaoContrato.listarContratosCliente(idCliente);
+    }
+
+    public List<Ocorrencias> multasPendentesGeral() {
+        return operacaoMultas.multasPendentes();
+    }
+
+    public List<Ocorrencias> buscarMultaCliente(int idCliente) {
+        return operacaoMultas.buscarMultaCliente(idCliente);
+    }
+
+    public boolean registrarAvaria(int idMulta, String avaria) {
+        return operacaoMultas.registrarAvaria(idMulta, avaria);
+    }
+
+    public boolean marcarPago(int idMulta) {
+        return operacaoMultas.marcarPago(idMulta);
     }
 
 }
