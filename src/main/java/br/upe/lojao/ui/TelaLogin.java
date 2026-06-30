@@ -39,9 +39,16 @@ public class TelaLogin {
                     int validacao = operacaoUsuario.autenticarUsuario(this.login, this.senha, this.tipo);
                     if(validacao > -1){
                         this.id = validacao;
-                        if(tipo == "Cliente" || tipo == "cliente"){receberValidarEntradasCliente();}
-                        else if (tipo == "Funcionario" || tipo == "funcionario"){receberValidarEntradasFuncionario();}
-                        else if (tipo == "Administrador" || tipo =="administrador"){receberValidarEntradasAdministrador();}
+                        if(tipo.equalsIgnoreCase("cliente")) {
+                            MenuCliente menuCliente = new MenuCliente();
+                            menuCliente.receberValidarEntradas();
+                        } else if(tipo.equalsIgnoreCase("funcionario")) {
+                            MenuFuncionario menuFuncionario = new MenuFuncionario();
+                            menuFuncionario.receberValidarEntradas();
+                        } else if(tipo.equalsIgnoreCase("administrador")) {
+                            MenuAdministrador menuAdministrador = new MenuAdministrador();
+                            menuAdministrador.receberValidarEntradas();
+                        }
                     }
                     else{
                         System.out.println("Login ou senha incorretos | Aperte ENTER para voltar a tela de login");

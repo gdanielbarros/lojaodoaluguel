@@ -1,10 +1,12 @@
 package br.upe.lojao.negocios;
 import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
+import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OperacaoUsuario implements IOperacaoUsuario{
 
@@ -35,6 +37,20 @@ public class OperacaoUsuario implements IOperacaoUsuario{
     public ArrayList<Cliente> buscarCliente(String nome){
         return persistenciaUsuario.buscarCliente(nome);
     }
+    
+    public ArrayList<Cliente> listarClientes() {
+        return persistenciaUsuario.lerClientes();
+    }
+
+    public ArrayList<Funcionario> listarFuncionarios() {
+        return persistenciaUsuario.lerFuncionarios();
+    }
+
+    public ArrayList<Administrador> listarAdministradores() {
+        return persistenciaUsuario.lerAdministradores();
+    }
+    
+  
 
     public String cadastrarFuncionario(Funcionario contratado){
         return persistenciaUsuario.cadastrarFuncionario(contratado);

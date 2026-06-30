@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Produtos;
+
 import java.util.List;
 
 public class MenuCliente extends Menu{
@@ -31,7 +33,7 @@ public class MenuCliente extends Menu{
                     System.out.println("Fornecedor: " + p.getIdFornecedor());
                     System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
                     System.out.println("Conservação: " + p.getConservacao());
-                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
                     System.out.println("---------------------------------------");
                 }
             } 
@@ -74,7 +76,7 @@ public class MenuCliente extends Menu{
                 }
             }
         } else if (entrada == 4) {
-            List<Contrato> historico = facade.historicoCliente(this.id);
+            List<Contrato> historico = facade.historicoCliente(this.id, 1);
             if (historico.isEmpty()) {
                 System.out.println("Nenhum historico encontrado.");
             } else {

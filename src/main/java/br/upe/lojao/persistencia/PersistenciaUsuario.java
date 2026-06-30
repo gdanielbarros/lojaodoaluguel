@@ -16,21 +16,21 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
     ILerCSV lerCsv = new LerCSV();
     IEscreverCSV escreverCsv = new EscreverCSV();
 
-    private ArrayList<Cliente> lerClientes() {
+    public ArrayList<Cliente> lerClientes() {
         return new ArrayList<>(lerCsv.ler(caminhoCliente, linha ->
             new Cliente(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Cliente",
                 linha[4], linha[5], linha[6], Boolean.parseBoolean(linha[7]), Boolean.parseBoolean(linha[8]))
         ));
     }
 
-    private ArrayList<Funcionario> lerFuncionarios() {
+    public ArrayList<Funcionario> lerFuncionarios() {
         return new ArrayList<>(lerCsv.ler(caminhoFuncionario, linha ->
             new Funcionario(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Funcionario",
                 linha[4], linha[5], linha[6], Boolean.parseBoolean(linha[7]))
         ));
     }
 
-    private ArrayList<Administrador> lerAdministradores() {
+    public ArrayList<Administrador> lerAdministradores() {
         return new ArrayList<>(lerCsv.ler(caminhoAdministrador, linha ->
             new Administrador(Integer.parseInt(linha[0]), linha[1], linha[2], linha[3], "Administrador", linha[4])
         ));

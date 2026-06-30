@@ -1,11 +1,9 @@
 package br.upe.lojao.facade;
 
-import br.upe.lojao.ui.MenuAdministrador;
-import br.upe.lojao.ui.MenuCliente;
-import br.upe.lojao.ui.MenuFuncionario;
 import br.upe.lojao.negocios.OperacaoUsuario;
+import br.upe.lojao.negocios.IOperacaoUsuario;
 import br.upe.lojao.negocios.OperacaoItem; 
-import br.upe.lojao.persistencia.PersistenciaUsuario;
+import br.upe.lojao.negocios.IOperacaoItem; 
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
@@ -29,24 +27,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Facade {
-    private OperacaoUsuario operacaoUsuario = new OperacaoUsuario();
+    private IOperacaoUsuario operacaoUsuario = new OperacaoUsuario();
     private IOperacaoMultas operacaoMultas = new OperacaoMultas();
-    private OperacaoItem operacaoItem = new OperacaoItem();
+    private IOperacaoItem operacaoItem = new OperacaoItem();
     private IOperacaoContrato operacaoContrato = new OperacaoContrato();
     private IOperacaoCategoria operacaoCategoria = new OperacaoCategoria();
     private IOperacaoFornecedor operacaoFornecedor = new OperacaoFornecedor();
-    private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
-    private MenuCliente menucliente = new MenuCliente();
-    private MenuFuncionario menufuncionario = new MenuFuncionario();
-    private MenuAdministrador menuadministrador = new MenuAdministrador();
 
 
-    public boolean autenticarUsuario(String login, String senha, String tipo){
-        return operacaoUsuario.autenticarUsuario(login,senha,tipo);
+    public boolean autenticarUsuario(String login, String senha, String tipo) {
+        return operacaoUsuario.autenticarUsuario(login, senha, tipo) != -1;
     }
 
+    
     public String cadastrarCliente(Cliente cliente){
-        return operacaoUsuario.cadastararCliente(cliente);
+        return operacaoUsuario.cadastrarCliente(cliente);
     }
 
     public String editarCliente(int id, int opcao, String dadoModificado){
@@ -72,34 +67,27 @@ public class Facade {
     public String deletarFuncionario(int id){
         return operacaoUsuario.deletarFuncionario(id);
     }
+    
 
     public ArrayList<Funcionario> buscarFuncionario(String nome){
         return operacaoUsuario.buscarFuncionario(nome);
     }
 
     public ArrayList<Cliente> lerCliente(){
-        return percistenciaUsuario.lerCliente();
+        return operacaoUsuario.listarClientes();
     }
 
-    public boolean atualizarCliente(List<Cliente> cliente){
-        return percistenciaUsuario.atualizarCliente(cliente);
-    }
+   
 
     public ArrayList<Funcionario> lerFuncionario(){
-        return percistenciaUsuario.lerFuncionario();
+        return operacaoUsuario.listarFuncionarios();
     }
 
-    public boolean atualizarFuncionario(List<Funcionario> funcionarios){
-        return percistenciaUsuario.atualizarFuncionario(funcionarios);
-    }
-
+   
     public ArrayList<Administrador> lerAdministrador(){
-        return percistenciaUsuario.lerAdministrador();
+        return operacaoUsuario.listarAdministradores();
     }
 
-    public void receberValidarEntradaCliente(){
-        menucliente.receberValidarEntradas();
-    }
     
     public List<Contrato> listarAtivos(int idCliente) {
         return operacaoContrato.listarAtivos(idCliente);
@@ -109,8 +97,8 @@ public class Facade {
         return operacaoContrato.multasPendentes(idCliente);
     }
 
-    public List<Contrato> historicoCliente(int idCliente) {
-        return operacaoContrato.historicoCliente(idCliente);
+    public List<Contrato> historicoCliente(int idCliente, int opcao) {
+        return operacaoContrato.historicoCliente(idCliente, opcao);
     }
     
     public boolean registrarAluguel(int idProduto, LocalDateTime dataInicio, LocalDateTime dataFinal, int idCliente) {
@@ -118,7 +106,7 @@ public class Facade {
     }
 
     public boolean processarDevolucao(int idContrato) {
-        return operacaoContrato.concluir(idContrato);
+        return operacaoContrato.concluirContrato(idContrato);
     }
 
     public List<Contrato> listarTodosContratos() {
@@ -145,17 +133,15 @@ public class Facade {
         return operacaoMultas.marcarPago(idMulta);
     }
 
-	public List<Produtos> listarItemNome(String nome) {
-		return OperacaoItem.buscarItem(nome);
-	}
-
-	public List<Produtos> listarTodosItens() {
-		return OperacaoItem.listarTodosItens();
-	}
-
-	public List<Produtos> listarItemDisponivel() {
-		return OperacaoItem.listarItemDisponivel();
-	}
+    public List<Produtos> listarItemNome(String nome) {
+        return operacaoItem.buscarItem(nome);
+    }
+    public List<Produtos> listarTodosItens() {
+        return operacaoItem.listarTodosItens();
+    }
+    public List<Produtos> listarItemDisponivel() {
+        return operacaoItem.listarItemDisponivel();
+    }
 
 	public Produtos buscarProdutoPorId(int id) {
 		// TODO Gerar essa função dentro de OperacaoItem se nescessario.
@@ -188,8 +174,6 @@ public class Facade {
         return operacaoCategoria.deletarCategoria(id);
     }
 
-    // --- Fornecedor ---
-
     public boolean cadastrarFornecedor(String email, String telefone, String nome) {
         return operacaoFornecedor.cadastrarFornecedor(email, telefone, nome);
     }
@@ -213,5 +197,21 @@ public class Facade {
     public boolean deletarFornecedor(int id) {
         return operacaoFornecedor.deletarFornecedor(id);
     }
+    
+    public List<String[]> listarItensDisponiveisPorCategoria() {
+        return operacaoItem.listarItensDisponiveisPorCategoria();
+    }
 
+    public boolean salvarItensDisponiveisPorCategoria(List<String[]> dados) {
+        return operacaoItem.salvarItensDisponiveisPorCategoria(dados);
+    }
+
+    public List<String[]> listarProdutosAlugados() {
+        return operacaoItem.listarProdutosAlugados();
+    }
+
+    public boolean salvarProdutosAlugados(List<String[]> dados) {
+        return operacaoItem.salvarProdutosAlugados(dados);
+    }
+    
 }

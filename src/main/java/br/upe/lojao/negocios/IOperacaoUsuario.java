@@ -1,5 +1,6 @@
 package br.upe.lojao.negocios;
 
+import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
 
@@ -16,5 +17,8 @@ public interface IOperacaoUsuario {
     String editarFuncionario(int id, int opcao, String dadoModificado);
     String deletarFuncionario(int id);
     ArrayList<Funcionario> buscarFuncionario(String nome);
+    ArrayList<Cliente> listarClientes();
+    ArrayList<Funcionario> listarFuncionarios();
+    ArrayList<Administrador> listarAdministradores();
 
 }
