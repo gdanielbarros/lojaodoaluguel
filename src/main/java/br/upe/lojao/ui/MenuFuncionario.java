@@ -2,6 +2,7 @@ package br.upe.lojao.ui;
 
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Produtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -69,8 +70,73 @@ public class MenuFuncionario extends Menu {
     @Override
     protected void imprimirRespostaFacadeBoolean(int entrada) {}
 
+    // TODO: funcionar e verificar
     @Override
-    protected void imprimirRespostaFacadeListaProdutos(int entrada) {}
+    protected void imprimirRespostaFacadeListaProdutos(int entrada) {
+        
+        if (entrada == 1) {
+        	System.out.printf("===========Produtos===========%n 1 - Listar disponiveis%n 2 - Ver todos%n 3 - Buscar pelo nome%n 0 - Voltar%n");
+            try {
+	        	int opcao = scanner.nextInt();
+	        	if (opcao == 1) { // itens disponiveis
+		        	List<Produtos> disponiveis = facade.listarItemDisponivel();
+		            if (disponiveis.isEmpty()) {
+		                System.out.println("Nenhum item disponível no momento.");
+		            } else {
+		                System.out.println("===========Itens Disponíveis===========");
+		                for (Produtos p : disponiveis) {
+		                    System.out.println("ID: " + p.getId());
+		                    System.out.println("Categoria: " + p.getIdCategoria());
+		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
+		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
+		                    System.out.println("Conservação: " + p.getConservacao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("---------------------------------------");
+		                }
+		            }
+		        } else if (opcao ==2) { // todos os itens
+		            List<Produtos> todos = facade.listarTodosItens();
+		            if (todos.isEmpty()) {
+		                System.out.println("Nenhum produto foi cadastrado.");
+		            } else {
+		                System.out.println("===========Todos os Produtos===========");
+		                for (Produtos p : todos) {
+		                    System.out.println("ID: " + p.getId());
+		                    System.out.println("Categoria: " + p.getIdCategoria());
+		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
+		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
+		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
+		                    System.out.println("Conservação: " + p.getConservacao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("---------------------------------------");
+		                }
+		            }
+		        } else if (opcao ==3) { // buscapor nome
+		        	System.out.println("Diga-me o nome do produto desejado.");
+		        	String nome = scanner.nextLine();
+		            List<Produtos> resultados = facade.listarItemNome(nome);
+		            if (resultados.isEmpty()) {
+		                System.out.println("Nenhum produto encontrado com o nome: " + nome);
+		            } else {
+		                System.out.println("===========Produtos Encontrados===========");
+		                for (Produtos p : resultados) {
+		                    System.out.println("ID: " + p.getId());
+		                    System.out.println("Categoria: " + p.getIdCategoria());
+		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
+		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
+		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
+		                    System.out.println("Conservação: " + p.getConservacao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("---------------------------------------");
+		                }
+		            }
+		        }
+            } catch (Exception excecao) {
+                System.out.println("ERRO!Digite um numero valido!");
+                limparBuffer();
+              }
+        }
+    }
 
     @Override
     protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado) {}

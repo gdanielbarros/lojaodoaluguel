@@ -4,6 +4,7 @@ import br.upe.lojao.ui.MenuAdministrador;
 import br.upe.lojao.ui.MenuCliente;
 import br.upe.lojao.ui.MenuFuncionario;
 import br.upe.lojao.negocios.OperacaoUsuario;
+import br.upe.lojao.negocios.OperacaoItem; 
 import br.upe.lojao.persistencia.PersistenciaUsuario;
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
@@ -12,6 +13,7 @@ import br.upe.lojao.negocios.OperacaoContrato;
 import br.upe.lojao.negocios.IOperacaoContrato;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Produtos;
 import br.upe.lojao.negocios.OperacaoMultas;
 import br.upe.lojao.negocios.IOperacaoMultas;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
@@ -23,6 +25,7 @@ import java.util.List;
 public class Facade {
     private OperacaoUsuario operacaoUsuario = new OperacaoUsuario();
     private IOperacaoMultas operacaoMultas = new OperacaoMultas();
+    private OperacaoItem operacaoItem = new OperacaoItem();
     private IOperacaoContrato operacaoContrato = new OperacaoContrato();
     private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
     private MenuCliente menucliente = new MenuCliente();
@@ -133,5 +136,23 @@ public class Facade {
     public boolean marcarPago(int idMulta) {
         return operacaoMultas.marcarPago(idMulta);
     }
+
+	public List<Produtos> listarItemNome(String nome) {
+		return OperacaoItem.buscarItem(nome);
+	}
+
+	public List<Produtos> listarTodosItens() {
+		return OperacaoItem.listarTodosItens();
+	}
+
+	public List<Produtos> listarItemDisponivel() {
+		return OperacaoItem.listarItemDisponivel();
+	}
+
+	public Produtos buscarProdutoPorId(int id) {
+		// TODO Gerar essa função dentro de OperacaoItem se nescessario.
+		return null;
+	}
+        
 
 }

@@ -104,7 +104,7 @@ public class OperacaoItem implements IOperacaoItem {
 	}
 	
 	@Override
-	public List<Produtos> lisarTodosItens() {
+	public List<Produtos> listarTodosItens() {
 		// basta mandar todos
 		return this.listaProdutos;
 	}

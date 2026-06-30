@@ -18,8 +18,26 @@ public class MenuCliente extends Menu{
     }
 
     @Override
-    protected void imprimirRespostaFacadeListaProdutos(int entrada){}
-
+    protected void imprimirRespostaFacadeListaProdutos(int entrada){
+        if (entrada == 1) {
+            List<Produtos> disponiveis = facade.listarItemDisponivel();
+            if (disponiveis.isEmpty()) {
+                System.out.println("Nenhum item disponível no momento.");
+            } else {
+                System.out.println("===========Itens Disponíveis===========");
+                for (Produtos p : disponiveis) {
+                    System.out.println("ID: " + p.getId());
+                    System.out.println("Categoria: " + p.getIdCategoria());
+                    System.out.println("Fornecedor: " + p.getIdFornecedor());
+                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
+                    System.out.println("Conservação: " + p.getConservacao());
+                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+                    System.out.println("---------------------------------------");
+                }
+            } 
+        }
+    }
+        
     @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada) {
         if (entrada == 2) {
