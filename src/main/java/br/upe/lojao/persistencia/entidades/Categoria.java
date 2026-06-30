@@ -6,9 +6,9 @@ public class Categoria {
 	private String nome;
 	private int quantidade;
 	
-	public Categoria(int id, int quantidade) {
+	public Categoria(int id, String nome, int quantidade) {
 		this.id = id;
-		//this.nome = nome;
+		this.nome = nome;
 		this.quantidade = quantidade;
 	}
 	
