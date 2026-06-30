@@ -1,4 +1,4 @@
-package br.upe.lojao.camada3_persistencia;
+package br.upe.lojao.persistencia;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -11,9 +11,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import br.upe.lojao.models.Produtos;
-import br.upe.lojao.models.Categoria;
-import br.upe.lojao.models.Fornecedor;
+import br.upe.lojao.persistencia.entidades.Categoria;
 
 
 public class PersistenciaCategoria {
@@ -31,10 +29,10 @@ public class PersistenciaCategoria {
 				
 				//id,nome,quantidade
 				int id = Integer.parseInt(partes[0]);
-				//private String nome;
+				String nome = partes[1];
 				int quantidade = Integer.parseInt(partes[2]);
-				
-				Categoria novaCategoria = new Categoria(id, quantidade);
+
+				Categoria novaCategoria = new Categoria(id, nome, quantidade);
 				listaCategorias.add(novaCategoria);
 			}
 			leitor.close();
@@ -55,7 +53,8 @@ public class PersistenciaCategoria {
 				escritor.write(novaLinha);
 				escritor.newLine();
 			}
-		} catch (exception e) {
+			escritor.close();
+		} catch (Exception e) {
 			// TODO: o que por aqui?
 		}
 	}
