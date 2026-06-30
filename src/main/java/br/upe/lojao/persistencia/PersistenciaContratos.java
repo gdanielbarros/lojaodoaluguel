@@ -12,7 +12,9 @@ public class PersistenciaContratos implements IPersistenciaContrato {
 
     private String caminhoContrato = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "contratos.csv";
     private String caminhoMultas = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "ocorrencias.csv";
-
+    private String caminhoFaturamento = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relátorios" + File.separator + "faturamento.csv";
+    private String caminhoHistorico = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relátorios" + File.separator + "historicoCliente.csv";
+    
     private List<Contrato> listaContratos = new ArrayList<>();
     private List<Ocorrencias> listaMultas = new ArrayList<>();
 
@@ -77,6 +79,33 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         return escrita;
     }
 
+    public boolean escreverRelatorios(LocalDateTime dataInicio, LocalDateTime dataFinal, BigDecimal valor) {
+        boolean resultado = false;
+        String[] cabecalho = {"Data de inicio", "Data final", "Valor"};
+        List<String[]> dados = new ArrayList<>();
+        
+        String[] linha = {dataInicio.toString(), dataFinal.toString(), valor.toString()};
+        dados.add(linha);
+        resultado = escritor.escrever(this.caminhoFaturamento, cabecalho, dados, registro -> registro);
+            
+        return resultado;
+    }
+
+    public boolean escreverRelatorios(List<Contrato> contratos) {
+        boolean resultado = false;
+        String[] cabecalho = {"id", "idCliente", "dataInicio", "dataFinal", "diasAlugados", "valortotal", "idItem", "status", "idMulta", "valorMulta"};
+        
+        resultado = escritor.escrever(this.caminhoHistorico, cabecalho, contratos, contrato -> new String[]{
+          String.valueOf(contrato.id()), String.valueOf(contrato.idCliente()),
+          contrato.dataInicio().toString(), contrato.dataFinal().toString(),
+          String.valueOf(contrato.diasAlugados()), contrato.valorTotal().toString(),
+          String.valueOf(contrato.idItem()), contrato.status(),
+          String.valueOf(contrato.idMulta()), contrato.valorMulta().toString()
+            });
+        
+        return resultado;
+    }
+
     public ArrayList<Contrato> lerContratos() {
         return new ArrayList<>(listaContratos);
     }
@@ -131,16 +160,6 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         return resultado;
     }
 
-    public boolean atualizarContratos(List<Contrato> contratos) {
-        this.listaContratos = contratos;
-        return escreverContratos();
-    }
-
-    public boolean atualizarMultas(List<Ocorrencias> multas) {
-        this.listaMultas = multas;
-        return escreverMultas();
-    }
-
     public boolean deletarContrato(int id) {
     	boolean resultado = false;
         for (int x = 0; x < this.listaContratos.size(); x++) {
@@ -174,12 +193,15 @@ public class PersistenciaContratos implements IPersistenciaContrato {
        return multas;
     }
 
-    public List<Contrato> clienteHistorico(int idCliente) {
+    public List<Contrato> clienteHistorico(int idCliente, int opcao) {
     	List<Contrato> historico = new ArrayList<>();
         for (int x = 0; x < this.listaContratos.size(); x++) {
             if (this.listaContratos.get(x).idCliente() == idCliente && this.listaContratos.get(x).status().equals("CONCLUIDO") == true) {
             	historico.add(this.listaContratos.get(x));
             }
+        }
+        if (opcao == 2){
+            escreverRelatorios(historico);
         }
       
        return historico;
@@ -241,5 +263,28 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         }
         return resultado;
     }
+
+    public List<BigDecimal> valorContratosPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim, int opcao){
+        List<BigDecimal> valorContratos = new ArrayList<>();
+        
+        for (int x = 0; x < this.listaContratos.size(); x++){
+            if (!this.listaContratos.get(x).dataInicio().isBefore(dataInicio) && !this.listaContratos.get(x).dataFinal().isAfter(dataFim) && this.listaContratos.get(x).status().equals("CONCLUIDO")){
+            	valorContratos.add(this.listaContratos.get(x).valorTotal());
+            	valorContratos.add(this.listaContratos.get(x).valorMulta());
+            }
+        }
+        return valorContratos;
+    }
     
+    public List<Contrato> listarContratosAtivos() {
+        List<Contrato> ativos = new ArrayList<>();
+        for (int i = 0; i < listaContratos.size(); i++) {
+            Contrato c = listaContratos.get(i);
+            if (!c.status().equals("CONCLUIDO")) {
+                ativos.add(c);
+            }
+        }
+        return ativos;
+    }
+
 }
