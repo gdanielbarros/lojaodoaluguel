@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import br.upe.lojao.persistencia.entidades.Fornecedor;
 
-public class PersistenciaFornecedor {
+public class PersistenciaFornecedor implements IPersistenciaFornecedor {
 	
 	private String caminhoFornecedor = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "fornecedor.csv";
 

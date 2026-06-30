@@ -14,7 +14,7 @@ import java.io.IOException;
 import br.upe.lojao.persistencia.entidades.Categoria;
 
 
-public class PersistenciaCategoria {
+public class PersistenciaCategoria implements IPersistenciaCategoria {
 	
 	private String caminhoCategoria = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "categoria.csv";
 
