@@ -17,6 +17,12 @@ import br.upe.lojao.persistencia.entidades.Produtos;
 import br.upe.lojao.negocios.OperacaoMultas;
 import br.upe.lojao.negocios.IOperacaoMultas;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.negocios.IOperacaoCategoria;
+import br.upe.lojao.negocios.OperacaoCategoria;
+import br.upe.lojao.negocios.IOperacaoFornecedor;
+import br.upe.lojao.negocios.OperacaoFornecedor;
+import br.upe.lojao.persistencia.entidades.Categoria;
+import br.upe.lojao.persistencia.entidades.Fornecedor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +33,8 @@ public class Facade {
     private IOperacaoMultas operacaoMultas = new OperacaoMultas();
     private OperacaoItem operacaoItem = new OperacaoItem();
     private IOperacaoContrato operacaoContrato = new OperacaoContrato();
+    private IOperacaoCategoria operacaoCategoria = new OperacaoCategoria();
+    private IOperacaoFornecedor operacaoFornecedor = new OperacaoFornecedor();
     private PersistenciaUsuario percistenciaUsuario = new PersistenciaUsuario();
     private MenuCliente menucliente = new MenuCliente();
     private MenuFuncionario menufuncionario = new MenuFuncionario();
@@ -153,6 +161,57 @@ public class Facade {
 		// TODO Gerar essa função dentro de OperacaoItem se nescessario.
 		return null;
 	}
-        
+
+    // --- Categoria ---
+
+    public boolean cadastrarCategoria(String nome, int quantidade) {
+        return operacaoCategoria.cadastrarCategoria(nome, quantidade);
+    }
+
+    public List<Categoria> listarCategorias() {
+        return operacaoCategoria.listarCategorias();
+    }
+
+    public Categoria buscarCategoriaPorId(int id) {
+        return operacaoCategoria.buscarPorId(id);
+    }
+
+    public List<Categoria> buscarCategoria(String nome) {
+        return operacaoCategoria.buscarCategoria(nome);
+    }
+
+    public boolean editarCategoria(int id, String novoNome, int novaQuantidade) {
+        return operacaoCategoria.editarCategoria(id, novoNome, novaQuantidade);
+    }
+
+    public boolean deletarCategoria(int id) {
+        return operacaoCategoria.deletarCategoria(id);
+    }
+
+    // --- Fornecedor ---
+
+    public boolean cadastrarFornecedor(String email, String telefone, String nome) {
+        return operacaoFornecedor.cadastrarFornecedor(email, telefone, nome);
+    }
+
+    public List<Fornecedor> listarFornecedores() {
+        return operacaoFornecedor.listarFornecedores();
+    }
+
+    public Fornecedor buscarFornecedorPorId(int id) {
+        return operacaoFornecedor.buscarPorId(id);
+    }
+
+    public List<Fornecedor> buscarFornecedor(String nome) {
+        return operacaoFornecedor.buscarFornecedor(nome);
+    }
+
+    public boolean editarFornecedor(int id, String novoEmail, String novoTelefone, String novoNome) {
+        return operacaoFornecedor.editarFornecedor(id, novoEmail, novoTelefone, novoNome);
+    }
+
+    public boolean deletarFornecedor(int id) {
+        return operacaoFornecedor.deletarFornecedor(id);
+    }
 
 }
