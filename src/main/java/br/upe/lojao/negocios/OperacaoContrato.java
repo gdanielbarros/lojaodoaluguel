@@ -11,6 +11,7 @@ import br.upe.lojao.persistencia.IPersistenciaContrato;
 import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaContratos;
 import br.upe.lojao.persistencia.PersistenciaProdutos;
+import br.upe.lojao.persistencia.IPersistenciaProduto;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
 
 public class OperacaoContrato implements IOperacaoContrato {
@@ -87,7 +88,7 @@ public class OperacaoContrato implements IOperacaoContrato {
         	permissao = false;
         }
 
-        Contrato atualizado;
+        Contrato atualizado = new Contrato(0, 1, LocalDateTime.MIN, LocalDateTime.MIN, 0L, BigDecimal.ZERO, 0, "ATIVO", 0, BigDecimal.ZERO);
         if (opcao == 1) {
             
             if (persistenciaUsuario.clienteExiste(valor) == false) {
@@ -205,11 +206,15 @@ public class OperacaoContrato implements IOperacaoContrato {
     	return multasCliente;
     }
     
-    public List<Contrato> historicoCliente(int idCliente){
+    public List<Contrato> historicoCliente(int idCliente, int opcao){
     	List<Contrato> historico = new ArrayList<>();
     	
         if (persistenciaUsuario.clienteExiste(idCliente) == true) {
-        	historico = persistencia.clienteHistorico(idCliente);
+        	historico = persistencia.clienteHistorico(idCliente, opcao);
+        }
+        if (opcao == 2 && !historico.isEmpty()) {
+        	historico.clear();
+        	historico.add(new Contrato(-2, 1, LocalDateTime.MIN, LocalDateTime.MIN, 0L, BigDecimal.ZERO, 0, "ATIVO", 0, BigDecimal.ZERO));
         }
     	return historico;
     }
@@ -217,7 +222,37 @@ public class OperacaoContrato implements IOperacaoContrato {
     public List<Contrato> listarContratosCliente(int idCliente) {
         List<Contrato> todosContratos = new ArrayList<>();
         todosContratos.addAll(persistencia.contratosClienteAtivos(idCliente));
-        todosContratos.addAll(persistencia.clienteHistorico(idCliente));
+        todosContratos.addAll(persistencia.clienteHistorico(idCliente, 1));
         return todosContratos;
+    }
+
+    public BigDecimal faturamento(LocalDateTime dataInicio, LocalDateTime dataFim, int opcao){
+        BigDecimal faturamentoPeriodo = new BigDecimal("0");
+        List<BigDecimal> valorContratosPeriodo = new ArrayList<>();
+
+        if (dataInicio.isAfter(LocalDateTime.now()) || dataFim.isAfter(LocalDateTime.now())){
+            faturamentoPeriodo = new BigDecimal("-1");
+        }
+        else if (dataInicio == dataFim){
+            faturamentoPeriodo = new BigDecimal("-2");
+        }
+        else if (dataInicio.isAfter(dataFim)){
+            faturamentoPeriodo = new BigDecimal("-3");
+        }
+        else{
+            valorContratosPeriodo = persistencia.valorContratosPeriodo(dataInicio, dataFim, opcao);
+            if (valorContratosPeriodo.isEmpty() == false){
+            for (int x = 0; x < valorContratosPeriodo.size(); x++){
+                faturamentoPeriodo = (faturamentoPeriodo.add(valorContratosPeriodo.get(x)).add(valorContratosPeriodo.get(x)));
+            }}
+            else {
+                faturamentoPeriodo = new BigDecimal("-5");
+            }
+        }
+        if (opcao == 2){
+        	persistencia.escreverRelatorios(dataInicio, dataFim, faturamentoPeriodo);
+            faturamentoPeriodo = new BigDecimal("-4");
+        }
+        return faturamentoPeriodo;
     }
 }

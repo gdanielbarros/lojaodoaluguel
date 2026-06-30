@@ -21,6 +21,7 @@ public interface IOperacaoContrato {
     List<Contrato> listarTodos();
     List<Contrato> listarAtivos(int idCliente);
     List<Ocorrencias> multasPendentes(int idCliente);
-    List<Contrato> historicoCliente(int idCliente);
+    List<Contrato> historicoCliente(int idCliente, int opcao);
     List<Contrato> listarContratosCliente(int idCliente);
+    BigDecimal faturamento(LocalDateTime dataInicio, LocalDateTime dataFim, int opcao);
 }

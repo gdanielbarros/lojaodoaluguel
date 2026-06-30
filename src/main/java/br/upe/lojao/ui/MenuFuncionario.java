@@ -15,7 +15,7 @@ public class MenuFuncionario extends Menu {
 
     @Override
     public void receberValidarEntradas() {
-        System.out.printf("===================Funcionario===================%n 1 - Registrar novo aluguel%n 2 - Processar devolucao%n 3 - Clientes%n 4 - Emitir relatorio operacional%n 5 - Contratos%n 6 - Multas%n 7 - Produtos%n 0 - Sair%n");
+    	System.out.printf("===================Funcionario===================%n 1 - Registrar novo aluguel%n 2 - Processar devolucao%n 3 - Clientes%n 4 - Relatorios%n 5 - Contratos%n 6 - Multas%n 7 - Produtos%n 0 - Sair%n");
         try {
             int opcao = scanner.nextInt();
             if (opcao == 1) {
@@ -50,10 +50,120 @@ public class MenuFuncionario extends Menu {
                 }
             } else if (opcao == 3) {
             } else if (opcao == 4) {
-            } else if (opcao == 5) {
+                System.out.printf("===========Relatorios===========%n 1 - Itens disponiveis por categoria%n 2 - Itens alugados com previsao de devolucao e clientes em atraso%n 3 - Historico de cliente especifico%n 0 - Voltar%n");
+                try {
+                    int opcaoRelatorio = scanner.nextInt();
+                    if (opcaoRelatorio == 1) {
+                        System.out.printf("1 - Visualizar%n 2 - Salvar em arquivo%n 0 - Voltar%n");
+                        int opcaoAcao = scanner.nextInt();
+                        if (opcaoAcao == 1) {
+                            List<String[]> dados = facade.listarItensDisponiveisPorCategoria();
+                            if (dados.isEmpty()) {
+                                System.out.println("Nenhum item disponivel no momento.");
+                            } else {
+                                System.out.println("===========Itens Disponiveis por Categoria===========");
+                                String categoriaAtual = "";
+                                for (int i = 0; i < dados.size(); i++) {
+                                    String[] linha = dados.get(i);
+                                    if (!linha[0].equals(categoriaAtual)) {
+                                        categoriaAtual = linha[0];
+                                        System.out.println("Categoria: " + categoriaAtual);
+                                    }
+                                    System.out.println("  ID: " + linha[1] + " | Nome: " + linha[2] +
+                                                       " | Taxa: R$ " + linha[3] + " | Conservacao: " + linha[4]);
+                                }
+                                System.out.println("---------------------------------------");
+                            }
+                        } else if (opcaoAcao == 2) {
+                            List<String[]> dados = facade.listarItensDisponiveisPorCategoria();
+                            if (dados.isEmpty()) {
+                                System.out.println("Nenhum dado para salvar.");
+                            } else {
+                                if (facade.salvarItensDisponiveisPorCategoria(dados)) {
+                                    System.out.println("Relatorio salvo com sucesso.");
+                                } else {
+                                    System.out.println("Erro ao salvar relatorio.");
+                                }
+                            }
+                        }
+                    } 
+                    
+                    else if (opcaoRelatorio == 2) {
+                        System.out.printf("1 - Visualizar%n 2 - Salvar em arquivo%n 0 - Voltar%n");
+                        int opcaoAcao = scanner.nextInt();
+                        if (opcaoAcao == 1) {
+                            List<String[]> dados = facade.listarProdutosAlugados();
+                            if (dados.isEmpty()) {
+                                System.out.println("Nenhum item alugado no momento.");
+                            } else {
+                                System.out.println("===========Itens Alugados no Momento===========");
+                                for (int i = 0; i < dados.size(); i++) {
+                                    String[] linha = dados.get(i);
+                                    System.out.println("ID Produto: " + linha[0]);
+                                    System.out.println("Nome: " + linha[1]);
+                                    System.out.println("Taxa Diaria: R$ " + linha[2]);
+                                    System.out.println("ID Cliente: " + linha[3]);
+                                    System.out.println("Previsao Devolucao: " + linha[4]);
+                                    System.out.println("Atrasado: " + linha[5]);
+                                    System.out.println("---------------------------------------");
+                                }
+                            }
+                        } else if (opcaoAcao == 2) {
+                            List<String[]> dados = facade.listarProdutosAlugados();
+                            if (dados.isEmpty()) {
+                                System.out.println("Nenhum dado para salvar.");
+                            } else {
+                                if (facade.salvarProdutosAlugados(dados)) {
+                                    System.out.println("Relatorio salvo com sucesso.");
+                                } else {
+                                    System.out.println("Erro ao salvar relatorio.");
+                                }
+                            }
+                        }
+                    }
+                    
+                    else if (opcaoRelatorio == 3) {
+                        System.out.printf("ID do cliente (0 para voltar): ");
+                        int idCliente = scanner.nextInt();
+                        if (idCliente != 0) {
+                            System.out.printf("1 - Visualizar%n 2 - Salvar em arquivo%n 0 - Voltar%n");
+                            int opcaoAcao = scanner.nextInt();
+                            if (opcaoAcao == 1) {
+                                List<Contrato> historico = facade.historicoCliente(idCliente, opcaoAcao);
+                                if (historico.isEmpty()) {
+                                    System.out.println("Nenhum historico encontrado.");
+                                } else {
+                                    System.out.println("===========Historico de Cliente===========");
+                                    for (int x = 0; x < historico.size(); x++) {
+                                        System.out.println("ID: " + historico.get(x).id());
+                                        System.out.println("Item: " + historico.get(x).idItem());
+                                        System.out.println("Inicio: " + historico.get(x).dataInicio());
+                                        System.out.println("Encerramento: " + historico.get(x).dataFinal());
+                                        System.out.println("Valor total: " + historico.get(x).valorTotal());
+                                        System.out.println("---------------------------------------");
+                                    }
+                                }
+                            } else if (opcaoAcao == 2) {
+                                if (!facade.historicoCliente(idCliente, opcaoAcao).isEmpty() && facade.historicoCliente(idCliente, opcaoAcao).get(0).id() == -2) {
+                                    System.out.println("Relatorio salvo com sucesso.");
+                                } else {
+                                    System.out.println("Erro ao salvar relatorio.");
+                                }
+                            }
+                        }
+                    } else if (opcaoRelatorio != 0) {
+                        System.out.println("Opcao invalida.");
+                    }
+                } catch (Exception excecao) {
+                    System.out.println("ERRO! Digite um numero valido.");
+                    limparBuffer();
+                }
+            }
+ else if (opcao == 5) {
                 imprimirRespostaFacadeListaContrato(opcao);
             } else if (opcao == 6) {
                 imprimirRespostaFacadeListaOcorrencia(opcao);
+            } else if (opcao == 7) {
             } else if (opcao == 0) {
                 return;
             } else {
@@ -90,7 +200,7 @@ public class MenuFuncionario extends Menu {
 		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
 		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
 		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
 		                    System.out.println("---------------------------------------");
 		                }
 		            }
@@ -107,7 +217,7 @@ public class MenuFuncionario extends Menu {
 		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
 		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
 		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
 		                    System.out.println("---------------------------------------");
 		                }
 		            }
@@ -126,7 +236,7 @@ public class MenuFuncionario extends Menu {
 		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
 		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
 		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorReposicao());
+		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
 		                    System.out.println("---------------------------------------");
 		                }
 		            }
@@ -144,7 +254,7 @@ public class MenuFuncionario extends Menu {
     @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada) {
         if (entrada == 5) {
-            System.out.printf("===========Contratos===========%n 1 - Listar todos%n 2 - Contratos de cliente%n 3 - Historico de cliente%n 0 - Voltar%n");
+            System.out.printf("===========Contratos===========%n 1 - Listar todos%n 2 - Contratos de cliente%n 0 - Voltar%n");
             try {
                 int opcao = scanner.nextInt();
                 if (opcao == 1) {
@@ -183,25 +293,7 @@ public class MenuFuncionario extends Menu {
                             }
                         }
                     }
-                } else if (opcao == 3) {
-                    System.out.printf("ID do cliente (0 para voltar): ");
-                    int idCliente = scanner.nextInt();
-                    if (idCliente != 0) {
-                        List<Contrato> historico = facade.historicoCliente(idCliente);
-                        if (historico.isEmpty()) {
-                            System.out.println("Nenhum historico encontrado.");
-                        } else {
-                            for (int x = 0; x < historico.size(); x++) {
-                                System.out.println("ID: " + historico.get(x).id());
-                                System.out.println("Item: " + historico.get(x).idItem());
-                                System.out.println("Inicio: " + historico.get(x).dataInicio());
-                                System.out.println("Encerramento: " + historico.get(x).dataFinal());
-                                System.out.println("Valor total: " + historico.get(x).valorTotal());
-                                System.out.println("---------------------------------------");
-                            }
-                        }
-                    }
-                }
+                } 
             } catch (Exception excecao) {
                 System.out.println("ERRO!Digite um numero!");
                 limparBuffer();
