@@ -1,146 +1,202 @@
 package br.upe.lojao.negocios;
 
 import br.upe.lojao.persistencia.PersistenciaProdutos;
+import br.upe.lojao.persistencia.IPersistenciaProduto;
+import br.upe.lojao.persistencia.PersistenciaCategoria;
+import br.upe.lojao.persistencia.IPersistenciaCategoria;
+import br.upe.lojao.persistencia.PersistenciaFornecedor;
+import br.upe.lojao.persistencia.IPersistenciaFornecedor;
+import br.upe.lojao.persistencia.PersistenciaContratos;
+import br.upe.lojao.persistencia.IPersistenciaContrato;
+
 import br.upe.lojao.persistencia.entidades.Produtos;
 import br.upe.lojao.persistencia.entidades.Categoria;
+import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Fornecedor;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OperacaoItem implements IOperacaoItem {
+    private IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
+    private IPersistenciaCategoria persistenciaCategoria = new PersistenciaCategoria();
+    private IPersistenciaFornecedor persistenciaFornecedor = new PersistenciaFornecedor();
+    private IPersistenciaContrato persistenciaContrato = new PersistenciaContratos();
 
-	private ArrayList<br.upe.lojao.persistencia.entidades.Produtos> listaProdutos;
-	private ArrayList<Categoria> listaCategoria;
-	private ArrayList<Fornecedor> listaFornecedor;
-	
-	
-	public OperacaoItem(){
-		PersistenciaProdutos leitorProduto = new PersistenciaProdutos();
-		LeituraCategoria = leitorCategoria = new LeituraCategoria();
-		LeituraFornecedor = leitorFornecedor = new LeituraFornecedor();
-		this.listaProdutos = leitorProduto.lerProduto();
-		this.listaCategoria = leitorCategoria.lerCategoria();
-		this.listaFornecedor = leitorFornecedor.lerFornecedor();
-	}
-	
-	@Override
-	public boolean cadastrar(Produtos item) {
-		// verificar, criar ID e settar.
-		if(verificarCategoriaFornecedor(item)) {
-			int novoId = gerarId();
-			item.setId(novoId);
-			// adiciona a lista e atualiza o CSV
-			listaProdutos.add(item);
-			leitorProduto.atualizarProdutos(listaProdutos);
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	@Override
-	public boolean verificarCategoriaFornecedor(Produtos item) {
-		boolean existenciaFornecedor, existenciaCategoria = false;
-		
-		// As sequintes usam um loop para procurar se o ID da categoria
-		// do produto bate com um ID de categoria já registrado.
-		
-		// não consegui fazer sem break, desculpa Jackson.
-		for(Categoria categoria : listaCategoria) {
-			if(categoria.equals(item.getCategoria())) {
-				existenciaCategoria = true;
-				break;
-			}
-		}
-		for(Fornecedor fornecedor : listaFornecedor) {
-			if(fornecedor.equals(item.getFornecedor())) {
-				existenciaFornecedor = true;
-				break;
-			}
-		}
+    public int gerarId() {
+        int novoId = persistenciaProduto.maiorIdProduto() + 1;
+        return novoId;
+    }
 
-		return existenciaFornecedor && existenciaCategoria;
-	}
-	
-	@Override
-	public boolean editarItem(int id) {
-		boolean retorno = false;
-		// varra a lista de produtos até achar o id certo.
-		for(Produtos produto : listaProdutos) {
-			if(produto.getId() == id) {
-				
-				// TODO: logica de edição
-				retorno = true;
-			}
-		}
-		return retorno;
-	}
-	
-	@Override
-	public List<Produtos> buscarItem(String nome) {
-		List<Produtos> itens = new ArrayList<>();
-		// varre e procura itens com o mesmo nome.
-		for (Produtos produto : listaProdutos) {
-			if(produto.getNome().contains(nome)) {
-				itens.add(produto);
-			}
-		}
-		
-		return itens;
-	}
-	
-	@Override
-	public List<Produtos> listarItemDisponivel() {
-		List<Produtos> disponiveis = new ArrayList<>();
-		// varrer por itens disponiveis
-		for(Produtos produto : listaProdutos) {
-			if(produto.getDisponibilidade().equalsIgnoreCase("disponivel")) {
-				disponiveis.add(produto);
-			}
-		}
-		return disponiveis;
-	}
-	
-	@Override
-	public List<Produtos> listarTodosItens() {
-		// basta mandar todos
-		return this.listaProdutos;
-	}
-	
-	@Override
-	public boolean deletarItem(int id) {
-		boolean sucesso = false;
-		
-		if(verificarExclusão(id)) {
-			for(Produtos produto : listaProdutos) {
-				
-			}
-		}
-	}
-	
-	
-	@Override
-	public int gerarId() {
-	    int maiorId = 0;
-	    for(Produtos produto : listaProdutos) {
-	    	if(produto.getId() > maiorId) {
-	    		maiorId = produto.getId();
-	    	}
-	    }
-	    return maiorId + 1;
-	}
+    public boolean verificarExclusao(int id) {
+        boolean permissao = true;
+        if (persistenciaContrato.itemContratoAtivo(id)) {
+            permissao = false;
+        }
+        return permissao;
+    }
 
-	@Override
-	public boolean verificarExclusão(int id) {
-		boolean retorno = false;
-	    for(Produtos produto : listaProdutos) {
-	    	if((produto.getId() == id) && 
-	    			produto.getDisponibilidade().equalsIgnoreCase("disponivel")) {
-	    		retorno = true;
-	    	}
-	    }
-	    return retorno;
-	}
+    public boolean cadastrarItem(Produtos item) {
+        boolean sucesso = false;
+        List<Categoria> categorias = persistenciaCategoria.lerCategoria();
+        List<Fornecedor> fornecedores = persistenciaFornecedor.lerFornecedor();
+        boolean categoriaValida = false;
+        boolean fornecedorValido = false;
+
+        for (int i = 0; i < categorias.size(); i++) {
+            Categoria categoriaAtual = categorias.get(i);
+            if (categoriaAtual.getId() == item.getIdCategoria()) {
+                categoriaValida = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < fornecedores.size(); i++) {
+            Fornecedor fornecedorAtual = fornecedores.get(i);
+            if (fornecedorAtual.getId() == item.getIdFornecedor()) {
+                fornecedorValido = true;
+                break;
+            }
+        }
+
+        if (categoriaValida && fornecedorValido) {
+            List<Produtos> produtos = persistenciaProduto.lerProdutos();
+            int novoId = gerarId();
+            item.setId(novoId);
+            produtos.add(item);
+            sucesso = persistenciaProduto.escreverProdutos(produtos);
+        }
+        return sucesso;
+    }
+
+    public boolean editarItem(int id, String novoNome, BigDecimal novaTaxa, int novaCategoria,
+                              int novoFornecedor, String novaDisponibilidade, String novaConservacao,
+                              BigDecimal novoValorRepo) {
+        boolean sucesso = false;
+        List<Produtos> produtos = persistenciaProduto.lerProdutos();
+        List<Categoria> categorias = persistenciaCategoria.lerCategoria();
+        List<Fornecedor> fornecedores = persistenciaFornecedor.lerFornecedor();
+        boolean categoriaValida = false;
+        boolean fornecedorValido = false;
+
+        for (int i = 0; i < categorias.size(); i++) {
+            Categoria categoriaAtual = categorias.get(i);
+            if (categoriaAtual.getId() == novaCategoria) {
+                categoriaValida = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < fornecedores.size(); i++) {
+            Fornecedor fornecedorAtual = fornecedores.get(i);
+            if (fornecedorAtual.getId() == novoFornecedor) {
+                fornecedorValido = true;
+                break;
+            }
+        }
+
+        if (categoriaValida && fornecedorValido) {
+            for (int i = 0; i < produtos.size(); i++) {
+                Produtos produtoAtual = produtos.get(i);
+                if (produtoAtual.getId() == id) {
+                    produtoAtual.setNome(novoNome);
+                    produtoAtual.setTaxaDiaria(novaTaxa);
+                    produtoAtual.setIdCategoria(novaCategoria);
+                    produtoAtual.setIdFornecedor(novoFornecedor);
+                    produtoAtual.setDisponibilidade(novaDisponibilidade);
+                    produtoAtual.setConservacao(novaConservacao);
+                    produtoAtual.setValorRepo(novoValorRepo);
+                    sucesso = persistenciaProduto.escreverProdutos(produtos);
+                    break;
+                }
+            }
+        }
+        return sucesso;
+    }
+
+    public boolean deletarItem(int id) {
+        boolean sucesso = false;
+        if (verificarExclusao(id)) {
+            List<Produtos> produtos = persistenciaProduto.lerProdutos();
+            for (int i = 0; i < produtos.size(); i++) {
+                Produtos produtoAtual = produtos.get(i);
+                if (produtoAtual.getId() == id) {
+                    produtoAtual.setDisponibilidade("INDISPONIVEL");
+                    sucesso = persistenciaProduto.escreverProdutos(produtos);
+                    break;
+                }
+            }
+        }
+        return sucesso;
+    }
+
+    public Produtos buscarPorId(int id) {
+        return persistenciaProduto.buscarPorId(id);
+    }
+
+    public List<Produtos> buscarItem(String nome) {
+        List<Produtos> resultado = new ArrayList<>();
+        List<Produtos> todos = persistenciaProduto.lerProdutos();
+        for (int i = 0; i < todos.size(); i++) {
+            Produtos produtoAtual = todos.get(i);
+            if (produtoAtual.getNome().toLowerCase().contains(nome.toLowerCase())) {
+                resultado.add(produtoAtual);
+            }
+        }
+        return resultado;
+    }
+
+    public List<Produtos> listarTodosItens() {
+        return persistenciaProduto.lerProdutos();
+    }
+
+    public List<Produtos> listarItemDisponivel() {
+        List<Produtos> disponiveis = new ArrayList<>();
+        List<Produtos> todos = persistenciaProduto.lerProdutos();
+        for (int i = 0; i < todos.size(); i++) {
+            Produtos produtoAtual = todos.get(i);
+            if (produtoAtual.getDisponibilidade().equalsIgnoreCase("DISPONIVEL")) {
+                disponiveis.add(produtoAtual);
+            }
+        }
+        return disponiveis;
+    }
+    public List<String[]> listarItensDisponiveisPorCategoria() {
+        PersistenciaCategoria persistenciaCategoria = new PersistenciaCategoria();
+        List<Categoria> categorias = persistenciaCategoria.lerCategoria();
+        List<Produtos> disponiveis = this.listarItemDisponivel();
+        List<String[]> resultado = new ArrayList<>();
+
+        for (int i = 0; i < categorias.size(); i++) {
+            Categoria categoria = categorias.get(i);
+            for (int j = 0; j < disponiveis.size(); j++) {
+                Produtos produto = disponiveis.get(j);
+                if (produto.getIdCategoria() == categoria.getId()) {
+                    String[] linha = {
+                        categoria.getNome(),
+                        String.valueOf(produto.getId()),
+                        produto.getNome(),
+                        produto.getTaxaDiaria().toString(),
+                        produto.getConservacao()
+                    };
+                    resultado.add(linha);
+                }
+            }
+        }
+        return resultado;
+    }
+
+    public boolean salvarItensDisponiveisPorCategoria(List<String[]> dados) {
+        return persistenciaProduto.escreverRelatorioItensPorCategoria(dados);
+    }
+    
+    public List<String[]> listarProdutosAlugados() {
+        List<Contrato> ativos = persistenciaContrato.listarContratosAtivos();
+        return persistenciaProduto.listarDadosProdutosAlugados(ativos);
+    }
+
+    public boolean salvarProdutosAlugados(List<String[]> dados) {
+        return persistenciaProduto.escreverProdutosAlugados(dados);
+    }
+    
 }
