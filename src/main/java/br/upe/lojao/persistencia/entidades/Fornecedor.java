@@ -9,11 +9,11 @@ public class Fornecedor {
 	private String status;
 	
 	
-	public Fornecedor(int id, String email, String telefone, String status) {
+	public Fornecedor(int id, String email, String telefone, String nome, String status) {
 		this.id = id;
 		this.email = email;
 		this.telefone = telefone;
-		//this.nome = nome;
+		this.nome = nome;
 		this.status = status;
 	}
 	
@@ -29,7 +29,7 @@ public class Fornecedor {
 	    return this.telefone;
 	}
 	
-	public String{
+	public String getNome() {
 	    return this.nome;
 	}
 	
