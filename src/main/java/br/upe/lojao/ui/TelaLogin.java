@@ -14,24 +14,37 @@ public class TelaLogin {
     protected Scanner scanner = new Scanner(System.in);
     protected IOperacaoUsuario operacaoUsuario = new OperacaoUsuario();
 
+    public static void main (String[] args) {
+        TelaLogin iniciar = new TelaLogin();
+        iniciar.imprimirTela();
+    }
+    
     private void imprimirTela() {
-        System.out.printf("=================Tela para Login=================%n Login: ");
-        receberValidarEntradas("login");
-        System.out.printf("%n Senha: ");
-        receberValidarEntradas("senha");
-        System.out.printf("%n Tipo(Cliente | Funcionario | Administrador):");
-        receberValidarEntradas("tipo");
-        System.out.printf("%n");
+        while (true) {
+            System.out.printf("=================Tela para Login=================%n Login: ");
+            receberValidarEntradas("login");
+            System.out.printf("%n Senha: ");
+            receberValidarEntradas("senha");
+            System.out.printf("%n Tipo(Cliente | Funcionario | Administrador):");
+            boolean tipoValido = receberValidarEntradas("tipo");
+            System.out.printf("%n");
+            if (!tipoValido) {
+                System.out.println("Tipo invalido. Pressione ENTER para tentar novamente.");
+                scanner.nextLine();
+            }
+        }
     }
 
-    private void receberValidarEntradas(String opcao){
+    private boolean receberValidarEntradas(String opcao){
         try{
             String resposta=scanner.next();
             if(opcao.equals("login")){
                 this.login=resposta;
+                return true;
             }
             else if(opcao.equals("senha")){
                 this.senha=resposta;
+                return true;
             }
             else if(opcao.equals("tipo")){
                 if(resposta.equalsIgnoreCase("cliente") || resposta.equalsIgnoreCase("funcionario") || resposta.equalsIgnoreCase("administrador")){
@@ -50,16 +63,25 @@ public class TelaLogin {
                             MenuAdministrador menuAdministrador = new MenuAdministrador();
                             menuAdministrador.receberValidarEntradas();
                         }
+                        return true;
                     }
                     else{
                         System.out.println("Login ou senha incorretos | Aperte ENTER para voltar a tela de login");
                         scanner.next();
+                        return true;
                     }
+                }
+                else{
+                    System.out.printf("%n Erro, tipo invalido!%n");
+                    return false;
                 }
             }
             else{
-                System.out.printf("%n Erro, tipo invalido!");
+                System.out.printf("%n Erro, opcao invalida!%n");
+                return false;
             }
-        } catch (Exception e){}
+        } catch (Exception e){
+            return false;
+        }
     }
 }

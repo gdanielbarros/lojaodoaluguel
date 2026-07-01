@@ -20,55 +20,54 @@ public class MenuAdministrador extends MenuFuncionario {
 
     @Override
     public void receberValidarEntradas() {
-        System.out.printf("===================Administrador===================%n"
-                + " 1 - Registrar novo aluguel%n"
-                + " 2 - Processar devolucao%n"
-                + " 3 - Clientes%n"
-                + " 4 - Relatorios%n"
-                + " 5 - Contratos%n"
-                + " 6 - Multas%n"
-                + " 7 - Produtos%n"
-                + " 8 - Categorias%n"
-                + " 9 - Fornecedores%n"
-                + " 10 - Funcionarios%n"
-                + " 0 - Sair%n");
-        try {
-            int opcao = scanner.nextInt();
+        int opcao = -1;
+        while (opcao != 0) {
+            System.out.printf("===================Administrador===================%n"
+                    + " 1 - Registrar novo aluguel%n"
+                    + " 2 - Processar devolucao%n"
+                    + " 3 - Clientes%n"
+                    + " 4 - Relatorios%n"
+                    + " 5 - Contratos%n"
+                    + " 6 - Multas%n"
+                    + " 7 - Produtos%n"
+                    + " 8 - Categorias%n"
+                    + " 9 - Fornecedores%n"
+                    + " 10 - Funcionarios%n"
+                    + " 0 - Sair%n");
+            try {
+                opcao = scanner.nextInt();
 
-            if (opcao == 1) {
-                registrarAluguel();
-            } else if (opcao == 2) {
-                processarDevolucao();
-            } else if (opcao == 3) {
-                menuClientes();
-            } else if (opcao == 4) {
-                menuRelatorios();
-            } else if (opcao == 5) {
-                imprimirRespostaFacadeListaContrato(5);
-            } else if (opcao == 6) {
-                imprimirRespostaFacadeListaOcorrencia(6);
-            } else if (opcao == 7) {
-                imprimirRespostaFacadeListaProdutos(7);
-            } else if (opcao == 8) {
-                menuCategorias();
-            } else if (opcao == 9) {
-                menuFornecedores();
-            } else if (opcao == 10) {
-                menuFuncionarios();
-            } else if (opcao == 0) {
-                return;
-            } else {
-                System.out.println("Opcao invalida.");
+                if (opcao == 1) {
+                    registrarAluguel();
+                } else if (opcao == 2) {
+                    processarDevolucao();
+                } else if (opcao == 3) {
+                    menuClientes();
+                } else if (opcao == 4) {
+                    menuRelatorios();
+                } else if (opcao == 5) {
+                    imprimirRespostaFacadeListaContrato(5);
+                } else if (opcao == 6) {
+                    imprimirRespostaFacadeListaOcorrencia(6);
+                } else if (opcao == 7) {
+                    imprimirRespostaFacadeListaProdutos(7);
+                } else if (opcao == 8) {
+                    menuCategorias();
+                } else if (opcao == 9) {
+                    menuFornecedores();
+                } else if (opcao == 10) {
+                    menuFuncionarios();
+                } else if (opcao == 0) {
+                    return;
+                } else {
+                    System.out.println("Opcao invalida.");
+                }
+            } catch (Exception excecao) {
+                System.out.println("ERRO! Opcao invalida, digite um numero.");
+                limparBuffer();
             }
-        } catch (Exception excecao) {
-            System.out.println("ERRO! Opcao invalida, digite um numero.");
-            limparBuffer();
-        } finally {
-            receberValidarEntradas();
         }
     }
-
-    
 
     private void registrarAluguel() {
         try {
@@ -113,8 +112,6 @@ public class MenuAdministrador extends MenuFuncionario {
             limparBuffer();
         }
     }
-
-    
 
     private void menuClientes() {
         System.out.printf("===========Clientes===========%n 1 - Cadastrar%n 2 - Deletar%n 3 - Listar%n 4 - Buscar por nome%n 0 - Voltar%n");
@@ -167,8 +164,6 @@ public class MenuAdministrador extends MenuFuncionario {
             limparBuffer();
         }
     }
-
-    
 
     private void menuFuncionarios() {
         System.out.printf("===========Funcionarios===========%n 1 - Cadastrar%n 2 - Editar%n 3 - Deletar%n 4 - Listar%n 5 - Buscar por nome%n 0 - Voltar%n");
@@ -231,7 +226,6 @@ public class MenuAdministrador extends MenuFuncionario {
         }
     }
 
-    
     private void menuCategorias() {
         System.out.printf("===========Categorias===========%n 1 - Listar%n 2 - Buscar por nome%n 3 - Cadastrar%n 4 - Editar%n 5 - Deletar%n 0 - Voltar%n");
         try {
@@ -260,9 +254,7 @@ public class MenuAdministrador extends MenuFuncionario {
             } else if (opcao == 3) {
                 System.out.print("Nome: ");
                 String nome = scanner.nextLine();
-                System.out.print("Quantidade: ");
-                int quantidade = scanner.nextInt();
-                if (facade.cadastrarCategoria(nome, quantidade)) {
+                if (facade.cadastrarCategoria(nome)) {
                     System.out.println("Categoria cadastrada com sucesso.");
                 } else {
                     System.out.println("Erro ao cadastrar categoria (nome ja existe?).");
@@ -294,8 +286,6 @@ public class MenuAdministrador extends MenuFuncionario {
             limparBuffer();
         }
     }
-
-    
 
     private void menuFornecedores() {
         System.out.printf("===========Fornecedores===========%n 1 - Listar%n 2 - Buscar por nome%n 3 - Cadastrar%n 4 - Editar%n 5 - Deletar%n 0 - Voltar%n");
@@ -363,8 +353,6 @@ public class MenuAdministrador extends MenuFuncionario {
             limparBuffer();
         }
     }
-
-    
 
     private void menuRelatorios() {
         System.out.printf("===========Relatorios===========%n 1 - Itens disponiveis por categoria%n 2 - Itens alugados / atrasados%n 3 - Historico de cliente especifico%n 4 - Faturamento em periodo%n 0 - Voltar%n");
@@ -483,8 +471,6 @@ public class MenuAdministrador extends MenuFuncionario {
             limparBuffer();
         }
     }
-
-    
 
     @Override
     protected void imprimirRespostaFacadeBoolean(int entrada) {}
@@ -696,6 +682,75 @@ public class MenuAdministrador extends MenuFuncionario {
         } catch (Exception e) {
             System.out.println("Erro ao deletar produto: " + e.getMessage());
             limparBuffer();
+        }
+    }
+
+    @Override
+    protected void imprimirRespostaFacadeListaOcorrencia(int entrada) {
+        if (entrada == 6) {
+            System.out.printf("===========Multas===========%n 1 - Multas pendentes%n 2 - Multas de cliente especifico%n 3 - Registrar avaria%n 4 - Deletar multa%n 0 - Voltar%n");
+            try {
+                int opcao = scanner.nextInt();
+                if (opcao == 1) {
+                    List<Ocorrencias> multas = facade.multasPendentesGeral();
+                    if (multas.isEmpty() || multas.get(0).id() == -1) {
+                        System.out.println("Nenhuma multa pendente encontrada.");
+                    } else {
+                        for (int x = 0; x < multas.size(); x++) {
+                            System.out.println("ID: " + multas.get(x).id());
+                            System.out.println("Contrato: " + multas.get(x).idContrato());
+                            System.out.println("Cliente: " + multas.get(x).idCliente());
+                            System.out.println("Valor: " + multas.get(x).valorFinal());
+                            System.out.println("Avarias: " + multas.get(x).avarias());
+                            System.out.println("Status: " + multas.get(x).status());
+                            System.out.println("---------------------------------------");
+                        }
+                    }
+                } else if (opcao == 2) {
+                    System.out.printf("ID do cliente (0 para voltar): ");
+                    int idCliente = scanner.nextInt();
+                    if (idCliente != 0) {
+                        List<Ocorrencias> multas = facade.buscarMultaCliente(idCliente);
+                        if (multas.isEmpty() || multas.get(0).id() == -1) {
+                            System.out.println("Nenhuma multa encontrada.");
+                        } else {
+                            for (int x = 0; x < multas.size(); x++) {
+                                System.out.println("ID: " + multas.get(x).id());
+                                System.out.println("Contrato: " + multas.get(x).idContrato());
+                                System.out.println("Cliente: " + multas.get(x).idCliente());
+                                System.out.println("Valor: " + multas.get(x).valorFinal());
+                                System.out.println("Avarias: " + multas.get(x).avarias());
+                                System.out.println("Status: " + multas.get(x).status());
+                                System.out.println("---------------------------------------");
+                            }
+                        }
+                    }
+                } else if (opcao == 3) {
+                    System.out.printf("ID da multa (0 para voltar): ");
+                    int idMulta = scanner.nextInt();
+                    if (idMulta != 0) {
+                        limparBuffer();
+                        System.out.printf("Descricao da avaria: ");
+                        String avaria = scanner.nextLine();
+                        if (facade.registrarAvaria(idMulta, avaria)) {
+                            System.out.println("Avaria registrada com sucesso.");
+                        } else {
+                            System.out.println("Erro ao registrar avaria.");
+                        }
+                    }
+                } else if (opcao == 4) {
+                    System.out.print("ID da multa para deletar: ");
+                    int idMulta = scanner.nextInt();
+                    if (facade.deletarMulta(idMulta)) {
+                        System.out.println("Multa deletada com sucesso.");
+                    } else {
+                        System.out.println("Erro ao deletar multa. Verifique se esta paga.");
+                    }
+                }
+            } catch (Exception excecao) {
+                System.out.println("ERRO! Opcao invalida, digite um numero.");
+                limparBuffer();
+            }
         }
     }
 

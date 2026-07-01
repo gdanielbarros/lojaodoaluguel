@@ -39,11 +39,7 @@ public class Facade {
         return operacaoUsuario.autenticarUsuario(login, senha, tipo) != -1;
     }
 
-    /**
-     * RN03: verifica contratos atrasados e aplica/atualiza as multas
-     * automaticamente. Deve ser chamado apos o login para garantir que
-     * as pendencias estejam em dia antes de exibir qualquer menu.
-     */
+    
     public void verificarAtrasos() {
         operacaoContrato.verificarMultas();
     }
@@ -180,10 +176,10 @@ public class Facade {
 		return operacaoItem.deletarItem(id);
 	}
 
-    // --- Categoria ---
+    
 
-    public boolean cadastrarCategoria(String nome, int quantidade) {
-        return operacaoCategoria.cadastrarCategoria(nome, quantidade);
+    public boolean cadastrarCategoria(String nome) {
+        return operacaoCategoria.cadastrarCategoria(nome);
     }
 
     public List<Categoria> listarCategorias() {
@@ -245,5 +241,21 @@ public class Facade {
     public boolean salvarProdutosAlugados(List<String[]> dados) {
         return operacaoItem.salvarProdutosAlugados(dados);
     }
+
     
+    public boolean editarContratoInt(int idContrato, int valor, int opcao) {
+        return operacaoContrato.atualizar(idContrato, valor, opcao);
+    }
+
+    public boolean editarContratoData(int idContrato, LocalDateTime valor, int opcao) {
+        return operacaoContrato.atualizar(idContrato, valor, opcao);
+    }
+
+    public boolean deletarContrato(int idContrato) {
+        return operacaoContrato.deletarContrato(idContrato);
+    }
+
+    public boolean deletarMulta(int idMulta) {
+        return operacaoMultas.deletarMulta(idMulta);
+    }
 }

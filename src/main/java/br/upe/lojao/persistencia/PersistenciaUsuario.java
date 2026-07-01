@@ -47,10 +47,10 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
 
     private boolean escreverFuncionarios(ArrayList<Funcionario> lista) {
         return escreverCsv.escrever(caminhoFuncionario,
-            new String[]{"id","nome","login","senha","email","telefone","cpf","statusContrato"},
+            new String[]{"id","nome","login","senha","email","cpf","telefone","statusContrato"},
             lista,
             f -> new String[]{ String.valueOf(f.id()), f.nome(), f.login(), f.senha(),
-                f.email(), f.telefone(), f.cpf(), String.valueOf(f.statusContrato()) }
+                f.email(), f.cpf(), f.telefone(), String.valueOf(f.statusContrato()) }
         );
     }
 
@@ -87,7 +87,17 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
         if (lista.size() == 0) {
             resposta = "Erro ao ler o arquivo CSV";
         }
-        lista.add(cliente);
+        
+        int novoId = 1;
+        for (Cliente c : lista) {
+            if (c.id() >= novoId) {
+                novoId = c.id() + 1;
+            }
+        }
+        Cliente clienteComId = new Cliente(novoId, cliente.nome(), cliente.login(), cliente.senha(), 
+            cliente.tipo(), cliente.email(), cliente.telefone(), cliente.cpf(), 
+            cliente.statusMulta(), cliente.statusContrato());
+        lista.add(clienteComId);
         if(escreverClientes(lista)){
             resposta = "Salvo com sucesso";
         }
@@ -157,10 +167,17 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
     public String cadastrarFuncionario(Funcionario contratado) {
         String resposta = "Erro ao salvar informações";
         ArrayList<Funcionario> lista = lerFuncionarios();
-        if (lista.size() == 0) {
-            resposta = "Erro ao ler o arquivo CSV";
+        
+        int novoId = 1;
+        for (Funcionario f : lista) {
+            if (f.id() >= novoId) {
+                novoId = f.id() + 1;
+            }
         }
-        lista.add(contratado);
+        Funcionario funcionarioComId = new Funcionario(novoId, contratado.nome(), contratado.login(), 
+            contratado.senha(), contratado.tipo(), contratado.email(), contratado.cpf(), 
+            contratado.telefone(), contratado.statusContrato());
+        lista.add(funcionarioComId);
         if (escreverFuncionarios(lista)) {
             resposta = "Cadastrado com sucesso";
         }

@@ -33,7 +33,21 @@ public abstract class Menu extends TelaLogin {
 
     protected void imprimirRespostaFacadeListaFornecedor (int entrada){}
     
-    protected void imprimirProdutos(List<Produtos> lista, boolean disponibilidade) {}
+    protected void imprimirProdutos(List<Produtos> lista, boolean comDisponibilidade) {
+        System.out.println("---------------------------------------");
+        for (Produtos p : lista) {
+            System.out.println("ID: " + p.getId());
+            System.out.println("Nome: " + p.getNome());
+            System.out.println("Categoria: " + p.getIdCategoria());
+            System.out.println("Fornecedor: " + p.getIdFornecedor());
+            System.out.println("Taxa Diaria: R$ " + p.getTaxaDiaria());
+            if (comDisponibilidade) {
+                System.out.println("Disponibilidade: " + p.getDisponibilidade());
+            }
+            System.out.println("Conservacao: " + p.getConservacao());
+            System.out.println("Valor Reposicao: R$ " + p.getValorRepo());
+            System.out.println("---------------------------------------");
+        }
+    }
     
 }
-

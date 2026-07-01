@@ -1,21 +1,16 @@
 package br.upe.lojao.ui;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import br.upe.lojao.persistencia.entidades.Produtos;
-
 import java.util.List;
 
-public class MenuCliente extends Menu{
-
-    private static final Log log = LogFactory.getLog(MenuCliente.class);
+public class MenuCliente extends Menu {
 
     @Override
     protected void imprimirRespostaFacadeBoolean(int entrada){
         if(entrada == 6){
-            System.out.println(operacaoUsuario.deletarCliente(this.id));
+            System.out.println(facade.deletarCliente(this.id));
         }
     }
 
@@ -27,12 +22,11 @@ public class MenuCliente extends Menu{
                 System.out.println("Nenhum item disponível no momento.");
             } else {
                 System.out.println("===========Itens Disponíveis===========");
-                imprimirProdutos(disponiveis);
-                }
-         } 
-     }
-    
-        
+                imprimirProdutos(disponiveis, true);
+            }
+        }
+    }
+
     @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada) {
         if (entrada == 2) {
@@ -90,69 +84,69 @@ public class MenuCliente extends Menu{
     @Override
     protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado){
         if (entrada == 5){
-            System.out.println(operacaoUsuario.editarCliente(this.id,escolha,dado));
+            System.out.println(facade.editarCliente(this.id, escolha, dado));
         }
     }
 
-
     @Override
     public void receberValidarEntradas(){
-        System.out.printf("=====================Cliente=====================%n 1 - Itens disponiveis%n 2 - Alugueis ativos%n 3 - Multas%n 4 - Historico%n 5 - Editar informações%n 6 - Excluir conta%n 0 - Sair%n");
-        try{
-            int opcao = scanner.nextInt();
-            limparBuffer();
-
-            if(opcao == 1){imprimirRespostaFacadeListaProdutos(opcao);}
-
-            else if(opcao == 2){imprimirRespostaFacadeListaContrato(opcao);}
-
-            else if(opcao == 3){imprimirRespostaFacadeListaContrato(opcao);}
-
-            else if(opcao == 4){imprimirRespostaFacadeListaContrato(opcao);}
-
-            else if (opcao == 5) {
-                System.out.printf("===========Qual dado deseja modificar?===========%n 1 - Nome% 2 - Login%n 3 - Senha%n 4 - Email%n 5 - Telefone%n 0 - Sair%n");
-                int escolha = scanner.nextInt();
-                limparBuffer();
-                if (escolha >= 1 && escolha <= 5){
-                    System.out.printf("Dado atualizado: ");
-                    String dado = scanner.nextLine();
-                    imprimirRespostaFacadeString(opcao,escolha,dado);
-                }
-            }
-
-            else if (opcao == 6) {
-                System.out.printf("Voce tem certeza que deseja continuar?%n (ESSA AÇÃO NAO PODERA SER DESFEITA!!!)%n 1 - Sim%n 2 - Não%n");
-                int escolha = scanner.nextInt();
+        int opcao = -1;
+        while (opcao != 0) {
+            System.out.printf("=====================Cliente=====================%n 1 - Itens disponiveis%n 2 - Alugueis ativos%n 3 - Multas%n 4 - Historico%n 5 - Editar informacoes%n 6 - Excluir conta%n 0 - Sair%n");
+            try {
+                opcao = scanner.nextInt();
                 limparBuffer();
 
-                if (escolha == 1){
-                    System.out.printf("Digite sua senha para confirmar: ");
-                    String dado = scanner.next();
+                if (opcao == 1) {
+                    imprimirRespostaFacadeListaProdutos(opcao);
+                } else if (opcao == 2) {
+                    imprimirRespostaFacadeListaContrato(opcao);
+                } else if (opcao == 3) {
+                    imprimirRespostaFacadeListaContrato(opcao);
+                } else if (opcao == 4) {
+                    imprimirRespostaFacadeListaContrato(opcao);
+                } else if (opcao == 5) {
+                    System.out.printf("===========Qual dado deseja modificar?===========%n 1 - Nome%n 2 - Login%n 3 - Senha%n 4 - Email%n 5 - Telefone%n 0 - Sair%n");
+                    int escolha = scanner.nextInt();
                     limparBuffer();
-                    System.out.printf("%n");
-
-                    if(dado.equals(this.senha)) {
-                        imprimirRespostaFacadeBoolean(opcao);
-                        System.out.println("Aperte ENTER para continuar");
-                        scanner.nextLine();
-                        opcao = 0;
+                    if (escolha >= 1 && escolha <= 5) {
+                        System.out.printf("Dado atualizado: ");
+                        String dado = scanner.nextLine();
+                        imprimirRespostaFacadeString(opcao, escolha, dado);
                     }
-                    else{System.out.println("Senha incorreta. Operação cancelada!");}
+                } else if (opcao == 6) {
+                    System.out.printf("Voce tem certeza que deseja continuar?%n (ESSA ACAO NAO PODERA SER DESFEITA!!!)%n 1 - Sim%n 2 - Nao%n");
+                    int escolha = scanner.nextInt();
+                    limparBuffer();
+
+                    if (escolha == 1) {
+                        System.out.printf("Digite sua senha para confirmar: ");
+                        String dado = scanner.next();
+                        limparBuffer();
+                        System.out.printf("%n");
+
+                        if (dado.equals(this.senha)) {
+                            imprimirRespostaFacadeBoolean(opcao);
+                            System.out.println("Aperte ENTER para continuar");
+                            scanner.nextLine();
+                            opcao = 0;
+                        } else {
+                            System.out.println("Senha incorreta. Operacao cancelada!");
+                        }
+                    } else if (escolha == 2) {
+                        System.out.println("Operacao cancelada!");
+                    } else {
+                        System.out.println("Opcao invalida! operacao cancelada");
+                    }
+                } else if (opcao == 0) {
+                    return;
+                } else {
+                    System.out.println("Opcao invalida");
                 }
-
-                else if(escolha == 2){System.out.println("Operação cancelada!");}
-
-                else{System.out.println("Opção invalida! operação cancelada");}
+            } catch (Exception e) {
+                System.out.println("ERRO! Opcao invalida, digite um numero");
+                limparBuffer();
             }
-
-            if(opcao == 0){return;}
-
-            else{System.out.println("Opção invalida");}
-
-        } catch (Exception e){System.out.println("ERRO! Opção invalida, digite um numero");}
-        finally {
-            receberValidarEntradas();
         }
     }
 }
