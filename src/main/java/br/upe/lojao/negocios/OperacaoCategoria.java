@@ -1,7 +1,10 @@
 package br.upe.lojao.negocios;
 
 import br.upe.lojao.persistencia.PersistenciaCategoria;
+import br.upe.lojao.persistencia.IPersistenciaProduto;
+import br.upe.lojao.persistencia.PersistenciaProdutos;
 import br.upe.lojao.persistencia.entidades.Categoria;
+import br.upe.lojao.persistencia.entidades.Produtos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
 public class OperacaoCategoria implements IOperacaoCategoria {
 
     private PersistenciaCategoria persistencia = new PersistenciaCategoria();
+    private IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
     private List<Categoria> categorias;
 
     // Contador simples para gerar IDs únicos, simulando um auto-incremento.
@@ -108,17 +112,21 @@ public class OperacaoCategoria implements IOperacaoCategoria {
     /**
      * Remove uma categoria.
      *
-     * ATENÇÃO - RN05 do enunciado (Integridade): antes de remover de
-     * verdade, será necessário verificar se existe algum Produto
-     * vinculado a esta categoria. Essa verificação depende da camada
-     * de Produto (João) e ainda não está implementada aqui - por ora,
-     * esta é uma exclusão direta.
+     * RN05 (Integridade): antes de remover de verdade, verificamos se
+     * existe algum Produto vinculado a esta categoria. Se houver, a
+     * exclusao e bloqueada.
      */
     @Override
     public boolean deletarCategoria(int id) {
         Categoria categoria = buscarPorId(id);
         if (categoria == null) {
             return false;
+        }
+        List<Produtos> produtos = persistenciaProduto.lerProdutos();
+        for (Produtos p : produtos) {
+            if (p.getIdCategoria() == id) {
+                return false; // categoria em uso, exclusao bloqueada
+            }
         }
         categorias.remove(categoria);
         persistencia.atualizarCategoria(categorias);

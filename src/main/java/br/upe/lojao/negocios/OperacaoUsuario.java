@@ -1,6 +1,8 @@
 package br.upe.lojao.negocios;
 import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaUsuario;
+import br.upe.lojao.persistencia.IPersistenciaContrato;
+import br.upe.lojao.persistencia.PersistenciaContratos;
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
 import br.upe.lojao.persistencia.entidades.Funcionario;
@@ -11,6 +13,7 @@ import java.util.List;
 public class OperacaoUsuario implements IOperacaoUsuario{
 
     IPersistenciaUsuario persistenciaUsuario = new PersistenciaUsuario();
+    IPersistenciaContrato persistenciaContrato = new PersistenciaContratos();
 
     public int autenticarUsuario(String login, String senha, String tipo) {
         return persistenciaUsuario.autenticarUsuario(login,senha,tipo);
@@ -31,6 +34,13 @@ public class OperacaoUsuario implements IOperacaoUsuario{
     }
 
     public String deletarCliente(int id){
+        // RN05: nao permite excluir cliente com aluguel ativo ou multa pendente
+        if (!persistenciaContrato.contratosClienteAtivos(id).isEmpty()) {
+            return "Nao e possivel excluir: cliente possui aluguel(eis) ativo(s).";
+        }
+        if (!persistenciaContrato.clienteMultaPendente(id).isEmpty()) {
+            return "Nao e possivel excluir: cliente possui multa(s) pendente(s).";
+        }
         return persistenciaUsuario.deletarCliente(id);
     }
 
