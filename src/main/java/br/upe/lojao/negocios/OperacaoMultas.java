@@ -32,8 +32,8 @@ public class OperacaoMultas implements IOperacaoMultas {
         BigDecimal resultado = new BigDecimal("0");
         Contrato contrato = persistencia.buscarContrato(idContrato);
 
-        if (contrato.id() != -1) {
-            BigDecimal taxaDiaria = contrato.valorTotal().divide(new BigDecimal(contrato.diasAlugados()));
+        if (contrato.id() != -1 && contrato.diasAlugados() > 0) {
+            BigDecimal taxaDiaria = contrato.valorTotal().divide(new BigDecimal(contrato.diasAlugados()), 2, java.math.RoundingMode.HALF_UP);
             long diasAtraso = Duration.between(contrato.dataFinal(), LocalDateTime.now()).toDays();
 
             if (diasAtraso > 0) {

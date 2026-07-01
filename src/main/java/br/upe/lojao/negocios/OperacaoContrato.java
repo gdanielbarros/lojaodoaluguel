@@ -43,41 +43,61 @@ public class OperacaoContrato implements IOperacaoContrato {
 
     public void verificarMultas() {
         List<Contrato> atrasados = persistencia.contratosAtrasados();
-        if (atrasados.isEmpty() != true) {
+        if (atrasados.isEmpty()) {
+            return;
+        }
+
         OperacaoMultas operacaoMultas = new OperacaoMultas();
         for (int x = 0; x < atrasados.size(); x++) {
             operacaoMultas.aplicarMulta(atrasados.get(x).id());
         }
-        }
+
+        // Recarrega os dados do disco para pegar o idMulta/valorMulta que aplicarMulta acabou de gravar
         persistencia.carregarDados();
 
         for (int x = 0; x < atrasados.size(); x++) {
-            Contrato atualizado = new Contrato(
-                atrasados.get(x).id(), atrasados.get(x).idCliente(), atrasados.get(x).dataInicio(), atrasados.get(x).dataFinal(), atrasados.get(x).diasAlugados(), atrasados.get(x).valorTotal(), atrasados.get(x).idItem(), "ATRASADO", atrasados.get(x).idMulta(), atrasados.get(x).valorMulta());
-            persistencia.atualizarContrato(atualizado);
+            Contrato atual = persistencia.buscarContrato(atrasados.get(x).id());
+            if (atual.id() != -1 && !atual.status().equals("CONCLUIDO")) {
+                Contrato atualizado = new Contrato(
+                    atual.id(), atual.idCliente(), atual.dataInicio(), atual.dataFinal(),
+                    atual.diasAlugados(), atual.valorTotal(), atual.idItem(),
+                    "ATRASADO", atual.idMulta(), atual.valorMulta());
+                persistencia.atualizarContrato(atualizado);
+            }
         }
     }
 
     public boolean registrar(int idProduto, LocalDateTime dataInicio, LocalDateTime dataFinal, int idCliente) {
-    	boolean permissao;
-    	if (persistencia.itemContratoAtivo(idProduto)) {
-        	permissao = false;
-        	}
-        if (persistencia.clienteMultaPendente(idCliente).isEmpty() == true) {
-        	permissao = false;
+        // RN01: item nao pode estar em contrato ativo/atrasado
+        if (persistencia.itemContratoAtivo(idProduto)) {
+            return false;
+        }
+        // RN04: cliente com multa pendente nao pode alugar
+        if (!persistencia.clienteMultaPendente(idCliente).isEmpty()) {
+            return false;
         }
         if (dataInicio.isAfter(dataFinal)) {
-        	permissao = false;
+            return false;
         }
         if (dataFinal.isBefore(LocalDateTime.now())) {
-        	permissao = false;
+            return false;
         }
+        if (!persistenciaUsuario.clienteExiste(idCliente)) {
+            return false;
+        }
+        IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
+        if (!persistenciaProduto.produtoExiste(idProduto)) {
+            return false;
+        }
+
         int id = gerarId();
         long diasAlugados = Duration.between(dataInicio, dataFinal).toDays();
+        if (diasAlugados <= 0) {
+            diasAlugados = 1; // RN02: aluguel de menos de 24h cobra o minimo de 1 dia
+        }
         BigDecimal valorTotal = calcularAluguel(diasAlugados, idProduto);
         Contrato novoContrato = new Contrato(id, idCliente, dataInicio, dataFinal, diasAlugados, valorTotal, idProduto, "ATIVO", 0, new BigDecimal("0"));
-        permissao = persistencia.adicionarContrato(novoContrato);
-        return permissao;
+        return persistencia.adicionarContrato(novoContrato);
     }
 
     public boolean atualizar(int idContrato, int valor, int opcao) {
@@ -153,31 +173,43 @@ public class OperacaoContrato implements IOperacaoContrato {
         LocalDateTime dataFinal = concluir.dataFinal();
         long diasAlugados = concluir.diasAlugados();
         BigDecimal valorTotal = concluir.valorTotal();
+        boolean atrasado = LocalDateTime.now().isAfter(concluir.dataFinal());
 
         if (LocalDateTime.now().isBefore(dataFinal)) {
             dataFinal = LocalDateTime.now();
             diasAlugados = Duration.between(concluir.dataInicio(), dataFinal).toDays();
+            if (diasAlugados <= 0) {
+                diasAlugados = 1;
+            }
             valorTotal = calcularAluguel(diasAlugados, concluir.idItem());
         }
 
-        Contrato concluido = new Contrato(concluir.id(), concluir.idCliente(), concluir.dataInicio(), dataFinal, diasAlugados, valorTotal, concluir.idItem(), "CONCLUIDO", concluir.idMulta(), concluir.valorMulta());
-        boolean resultado = persistencia.atualizarContrato(concluido);
+        int idMulta = concluir.idMulta();
+        BigDecimal valorMulta = concluir.valorMulta();
 
-        if (resultado && concluir.idMulta() != 0) {
+        if (atrasado) {
+            // RN03: garante que a multa por atraso seja calculada e persistida
+            // mesmo que verificarMultas() ainda nao tenha rodado para este contrato.
             OperacaoMultas operacaoMultas = new OperacaoMultas();
-            operacaoMultas.marcarPago(concluir.idMulta());
+            operacaoMultas.aplicarMulta(idContrato);
+            Contrato comMulta = persistencia.buscarContrato(idContrato);
+            idMulta = comMulta.idMulta();
+            valorMulta = comMulta.valorMulta();
         }
 
-        return resultado;
+        Contrato concluido = new Contrato(concluir.id(), concluir.idCliente(), concluir.dataInicio(), dataFinal, diasAlugados, valorTotal, concluir.idItem(), "CONCLUIDO", idMulta, valorMulta);
+
+        // Nao marcamos a multa como paga automaticamente aqui: RN04 exige que a
+        // pendencia seja quitada explicitamente antes de novos alugueis; marcar
+        // como paga so por concluir a devolucao anularia essa regra.
+        return persistencia.atualizarContrato(concluido);
     }
 
     public boolean deletarContrato(int idContrato) {
-    	boolean resultado;
-        if (verificarExclusao(idContrato) == false) {
-        	resultado = false;
+        if (!verificarExclusao(idContrato)) {
+            return false;
         }
-        resultado = persistencia.deletarContrato(idContrato);
-        return resultado;
+        return persistencia.deletarContrato(idContrato);
     }
 
     public Contrato buscarContrato(int idContrato) {
@@ -233,7 +265,7 @@ public class OperacaoContrato implements IOperacaoContrato {
         if (dataInicio.isAfter(LocalDateTime.now()) || dataFim.isAfter(LocalDateTime.now())){
             faturamentoPeriodo = new BigDecimal("-1");
         }
-        else if (dataInicio == dataFim){
+        else if (dataInicio.isEqual(dataFim)){
             faturamentoPeriodo = new BigDecimal("-2");
         }
         else if (dataInicio.isAfter(dataFim)){
@@ -243,7 +275,7 @@ public class OperacaoContrato implements IOperacaoContrato {
             valorContratosPeriodo = persistencia.valorContratosPeriodo(dataInicio, dataFim, opcao);
             if (valorContratosPeriodo.isEmpty() == false){
             for (int x = 0; x < valorContratosPeriodo.size(); x++){
-                faturamentoPeriodo = (faturamentoPeriodo.add(valorContratosPeriodo.get(x)).add(valorContratosPeriodo.get(x)));
+                faturamentoPeriodo = faturamentoPeriodo.add(valorContratosPeriodo.get(x));
             }}
             else {
                 faturamentoPeriodo = new BigDecimal("-5");
