@@ -531,7 +531,8 @@ public class MenuAdministrador extends MenuFuncionario {
         }
     }
 
-    private void imprimirProdutos(List<Produtos> lista, boolean comDisponibilidade) {
+    @Override
+    protected void imprimirProdutos(List<Produtos> lista, boolean comDisponibilidade) {
         System.out.println("---------------------------------------");
         for (Produtos p : lista) {
             System.out.println("ID: " + p.getId());

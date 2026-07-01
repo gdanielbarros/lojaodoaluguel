@@ -33,7 +33,7 @@ public abstract class Menu extends TelaLogin {
 
     protected void imprimirRespostaFacadeListaFornecedor (int entrada){}
     
-    protected void imprimirProdutos(List<Produtos> lista) {}
+    protected void imprimirProdutos(List<Produtos> lista, boolean disponibilidade) {}
     
 }
 
