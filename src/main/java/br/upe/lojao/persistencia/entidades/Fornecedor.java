@@ -37,7 +37,6 @@ public class Fornecedor {
 	    return this.status;
 	}
 	
-	// ------------------------------
 	
 	public void setId(int id) {
 	    this.id = id;

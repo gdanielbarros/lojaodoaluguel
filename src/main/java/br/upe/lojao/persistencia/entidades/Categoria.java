@@ -12,7 +12,6 @@ public class Categoria {
 		this.quantidade = quantidade;
 	}
 	
-	// Getters
 	public int getId() {
 	    return this.id;
 	}
@@ -25,7 +24,6 @@ public class Categoria {
 	    return this.quantidade;
 	}
 
-	// Setters
 	public void setId(int id) {
 	    this.id = id;
 	}

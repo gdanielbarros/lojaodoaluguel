@@ -9,22 +9,12 @@ import br.upe.lojao.persistencia.entidades.Produtos;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe da camada de NEGÓCIOS responsável pelas regras de Categoria.
- * Implementa IOperacaoCategoria, seguindo a orientação do professor.
- *
- * Esta classe usa PersistenciaCategoria (do João) para ler/gravar os
- * dados em arquivo. A lista de categorias é carregada do CSV ao criar
- * o objeto, e salva de volta no CSV sempre que há uma alteração
- * (cadastro, edição ou remoção).
- */
 public class OperacaoCategoria implements IOperacaoCategoria {
 
     private PersistenciaCategoria persistencia = new PersistenciaCategoria();
     private IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
     private List<Categoria> categorias;
 
-    
     private int proximoId = 1;
 
     public OperacaoCategoria() {
@@ -32,10 +22,6 @@ public class OperacaoCategoria implements IOperacaoCategoria {
         atualizarProximoId();
     }
 
-    /**
-     * Garante que o próximo ID gerado nunca repita um ID já existente
-     * no arquivo (importante ao carregar categorias já salvas antes).
-     */
     private void atualizarProximoId() {
         for (Categoria c : categorias) {
             if (c.getId() >= proximoId) {
@@ -45,23 +31,19 @@ public class OperacaoCategoria implements IOperacaoCategoria {
     }
 
     @Override
-    public boolean cadastrarCategoria(String nome, int quantidade) {
+    public boolean cadastrarCategoria(String nome) {
         if (existeCategoriaComNome(nome)) {
             return false;
         }
 
-        Categoria nova = new Categoria(proximoId, nome, quantidade);
+        
+        Categoria nova = new Categoria(proximoId, nome, 0);
         categorias.add(nova);
         proximoId++;
         persistencia.atualizarCategoria(categorias);
         return true;
     }
 
-    /**
-     * Verifica se já existe uma categoria com o nome informado.
-     * Comparação ignora maiúsculas/minúsculas, para evitar duplicidade
-     * tipo "Ferramentas" e "ferramentas" sendo tratadas como diferentes.
-     */
     private boolean existeCategoriaComNome(String nome) {
         for (Categoria c : categorias) {
             if (c.getNome().equalsIgnoreCase(nome)) {
@@ -109,13 +91,6 @@ public class OperacaoCategoria implements IOperacaoCategoria {
         return true;
     }
 
-    /**
-     * Remove uma categoria.
-     *
-     * RN05 (Integridade): antes de remover de verdade, verificamos se
-     * existe algum Produto vinculado a esta categoria. Se houver, a
-     * exclusao e bloqueada.
-     */
     @Override
     public boolean deletarCategoria(int id) {
         Categoria categoria = buscarPorId(id);

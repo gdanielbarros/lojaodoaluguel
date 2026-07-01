@@ -4,12 +4,7 @@ import br.upe.lojao.persistencia.entidades.Fornecedor;
 
 import java.util.List;
 
-/**
- * Interface da camada de NEGÓCIOS para Fornecedor.
- * Mesmo papel da IOperacaoCategoria: define o contrato que
- * OperacaoFornecedor deve seguir, permitindo que outras classes
- * (como a Facade) dependam da interface, não da implementação.
- */
+
 public interface IOperacaoFornecedor {
 
     boolean cadastrarFornecedor(String email, String telefone, String nome);

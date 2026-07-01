@@ -6,14 +6,7 @@ import br.upe.lojao.persistencia.entidades.Fornecedor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe da camada de NEGÓCIOS responsável pelas regras de Fornecedor.
- * Implementa IOperacaoFornecedor, seguindo a orientação do professor.
- *
- * Usa PersistenciaFornecedor (do João) para ler/gravar os dados em
- * arquivo. O status do fornecedor é representado como String
- * ("Ativo"/"Inativo"), conforme a entidade Fornecedor já implementada.
- */
+
 public class OperacaoFornecedor implements IOperacaoFornecedor {
 
     private PersistenciaFornecedor persistencia = new PersistenciaFornecedor();
@@ -27,10 +20,7 @@ public class OperacaoFornecedor implements IOperacaoFornecedor {
         atualizarProximoId();
     }
 
-    /**
-     * Garante que o próximo ID gerado nunca repita um ID já existente
-     * no arquivo (importante ao carregar fornecedores já salvos antes).
-     */
+    
     private void atualizarProximoId() {
         for (Fornecedor f : fornecedores) {
             if (f.getId() >= proximoId) {
@@ -52,11 +42,7 @@ public class OperacaoFornecedor implements IOperacaoFornecedor {
         return true;
     }
 
-    /**
-     * Verifica se já existe um fornecedor com o nome informado.
-     * Comparação ignora maiúsculas/minúsculas, mesma lógica usada em
-     * OperacaoCategoria para evitar duplicidade.
-     */
+    
     private boolean existeFornecedorComNome(String nome) {
         for (Fornecedor f : fornecedores) {
             if (f.getNome().equalsIgnoreCase(nome)) {
@@ -105,15 +91,7 @@ public class OperacaoFornecedor implements IOperacaoFornecedor {
         return true;
     }
 
-    /**
-     * Remove (de forma lógica) um fornecedor, marcando o status como
-     * "Inativo" em vez de excluir de verdade.
-     *
-     * RN05 do enunciado (Integridade): não se deve excluir um registro
-     * que possua histórico vinculado (neste caso, produtos fornecidos
-     * por ele). Como o status já existe como String no Fornecedor,
-     * usamos essa exclusão lógica em vez de remover da lista.
-     */
+    
     @Override
     public boolean deletarFornecedor(int id) {
         Fornecedor fornecedor = buscarPorId(id);

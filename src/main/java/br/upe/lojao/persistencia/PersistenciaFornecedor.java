@@ -3,10 +3,8 @@ package br.upe.lojao.persistencia;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,33 +19,53 @@ public class PersistenciaFornecedor implements IPersistenciaFornecedor {
 		String cadaLinha;
 		ArrayList<Fornecedor> listaFornecedores = new ArrayList<>();
 		
+		File arquivo = new File(caminhoFornecedor);
+		if (!arquivo.exists()) {
+			
+			try {
+				arquivo.getParentFile().mkdirs();
+				BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoFornecedor));
+				escritor.write("id,nome,email,telefone,status");
+				escritor.newLine();
+				escritor.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return listaFornecedores;
+		}
+		
 		try {
 			BufferedReader leitor = new BufferedReader(new FileReader(caminhoFornecedor));
+			leitor.readLine(); 
 			while ((cadaLinha = leitor.readLine()) != null) {
+				if (cadaLinha.trim().isEmpty()) continue;
 				String[] partes = cadaLinha.split(",");
 				
-				//id,nome,email,telefone,status
-				int id = Integer.parseInt(partes[0]);
-				String nome = partes[1];
-				String email = partes[2];
-				String telefone = partes[3];
-				String status = partes[4];
+				int id = Integer.parseInt(partes[0].trim());
+				String nome = partes[1].trim();
+				String email = partes[2].trim();
+				String telefone = partes[3].trim();
+				String status = partes[4].trim();
 
 				Fornecedor novoFornecedor = new Fornecedor(id, email, telefone, nome, status);
 				listaFornecedores.add(novoFornecedor);
 			}
 			leitor.close();
 		} catch (IOException e) {
-		// TODO: veja o que por aqui.	
+			e.printStackTrace();
 		}
 		return listaFornecedores;
-		
 	}
 	
 	public void atualizarFornecedor(List<Fornecedor> lista) {
 		try {
+			File arquivo = new File(caminhoFornecedor);
+			arquivo.getParentFile().mkdirs();
 			BufferedWriter escritor = new BufferedWriter(new FileWriter(caminhoFornecedor));
-			for(Fornecedor fornecedor: lista) {
+			
+			escritor.write("id,nome,email,telefone,status");
+			escritor.newLine();
+			for(Fornecedor fornecedor : lista) {
 				String novaLinha = fornecedor.getId() + "," +
 						fornecedor.getNome() + "," +
 						fornecedor.getEmail() + "," +
@@ -56,9 +74,10 @@ public class PersistenciaFornecedor implements IPersistenciaFornecedor {
 				escritor.write(novaLinha);
 				escritor.newLine();
 			}
+			escritor.flush();
 			escritor.close();
 		} catch (Exception e) {
-			// TODO: o que por aqui?
+			e.printStackTrace();
 		}
 	}
 
