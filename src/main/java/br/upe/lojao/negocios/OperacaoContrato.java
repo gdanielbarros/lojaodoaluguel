@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Produtos;
 import br.upe.lojao.persistencia.IPersistenciaContrato;
 import br.upe.lojao.persistencia.IPersistenciaUsuario;
 import br.upe.lojao.persistencia.PersistenciaContratos;
@@ -97,7 +98,22 @@ public class OperacaoContrato implements IOperacaoContrato {
         }
         BigDecimal valorTotal = calcularAluguel(diasAlugados, idProduto);
         Contrato novoContrato = new Contrato(id, idCliente, dataInicio, dataFinal, diasAlugados, valorTotal, idProduto, "ATIVO", 0, new BigDecimal("0"));
-        return persistencia.adicionarContrato(novoContrato);
+        boolean contratoSalvo = persistencia.adicionarContrato(novoContrato);
+        if (contratoSalvo) {
+            Produtos produto = persistenciaProduto.buscarPorId(idProduto);
+            if (produto != null) {
+                produto.setDisponibilidade("INDISPONIVEL");
+                List<Produtos> todos = persistenciaProduto.lerProdutos();
+                for (int i = 0; i < todos.size(); i++) {
+                    if (todos.get(i).getId() == idProduto) {
+                        todos.set(i, produto);
+                        break;
+                    }
+                }
+                persistenciaProduto.escreverProdutos(todos);
+            }
+        }
+        return contratoSalvo;
     }
 
     public boolean atualizar(int idContrato, int valor, int opcao) {

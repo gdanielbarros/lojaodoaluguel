@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IOperacaoItem {
     boolean cadastrarItem(Produtos item);
-    boolean editarItem(int id, String novoNome, BigDecimal novaTaxa, int novaCategoria,int novoFornecedor, String novaDisponibilidade, String novaConservacao,BigDecimal novoValorRepo);
+    boolean editarItem(int id, String novoNome, BigDecimal novaTaxa, int novaCategoria,int novoFornecedor, String novaConservacao,BigDecimal novoValorRepo);
     boolean deletarItem(int id);
     Produtos buscarPorId(int id);
     List<Produtos> buscarItem(String nome);

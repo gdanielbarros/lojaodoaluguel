@@ -14,7 +14,7 @@ public class PersistenciaProdutos implements IPersistenciaProduto {
     private IEscreverCSV escritor = new EscreverCSV();
 
     public List<Produtos> lerProdutos() {
-        return leitor.ler(caminhoProduto, linha -> {
+        List<Produtos> todos = leitor.ler(caminhoProduto, linha -> {
             int id = Integer.parseInt(linha[0]);
             String nome = linha[1];
             BigDecimal taxaDiaria = new BigDecimal(linha[2]);
@@ -25,6 +25,9 @@ public class PersistenciaProdutos implements IPersistenciaProduto {
             BigDecimal valorRepo = new BigDecimal(linha[7]);
             return new Produtos(id, nome, taxaDiaria, idCategoria, idFornecedor, disponibilidade, conservacao, valorRepo);
         });
+        
+        todos.removeIf(p -> p.getId() == 0 && "id".equalsIgnoreCase(p.getNome()));
+        return todos;
     }
 
     public boolean escreverProdutos(List<Produtos> produtos) {

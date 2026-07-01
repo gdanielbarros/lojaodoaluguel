@@ -42,11 +42,13 @@ public class OperacaoItem implements IOperacaoItem {
         List<Fornecedor> fornecedores = persistenciaFornecedor.lerFornecedor();
         boolean categoriaValida = false;
         boolean fornecedorValido = false;
+        Categoria categoriaEncontrada = null;
 
         for (int i = 0; i < categorias.size(); i++) {
             Categoria categoriaAtual = categorias.get(i);
             if (categoriaAtual.getId() == item.getIdCategoria()) {
                 categoriaValida = true;
+                categoriaEncontrada = categoriaAtual;
                 break;
             }
         }
@@ -65,14 +67,22 @@ public class OperacaoItem implements IOperacaoItem {
             item.setId(novoId);
             produtos.add(item);
             sucesso = persistenciaProduto.escreverProdutos(produtos);
+            
+            if (sucesso && categoriaEncontrada != null) {
+                categoriaEncontrada.setQuantidade(categoriaEncontrada.getQuantidade() + 1);
+                persistenciaCategoria.atualizarCategoria(categorias);
+            }
         }
         return sucesso;
     }
 
     public boolean editarItem(int id, String novoNome, BigDecimal novaTaxa, int novaCategoria,
-                              int novoFornecedor, String novaDisponibilidade, String novaConservacao,
-                              BigDecimal novoValorRepo) {
-        boolean sucesso = false;
+        int novoFornecedor, String novaConservacao,
+        BigDecimal novoValorRepo) {
+    	boolean sucesso = false;
+    	if (persistenciaContrato.itemContratoAtivo(id)) {
+    		return false;
+    		}
         List<Produtos> produtos = persistenciaProduto.lerProdutos();
         List<Categoria> categorias = persistenciaCategoria.lerCategoria();
         List<Fornecedor> fornecedores = persistenciaFornecedor.lerFornecedor();
@@ -103,7 +113,6 @@ public class OperacaoItem implements IOperacaoItem {
                     produtoAtual.setTaxaDiaria(novaTaxa);
                     produtoAtual.setIdCategoria(novaCategoria);
                     produtoAtual.setIdFornecedor(novoFornecedor);
-                    produtoAtual.setDisponibilidade(novaDisponibilidade);
                     produtoAtual.setConservacao(novaConservacao);
                     produtoAtual.setValorRepo(novoValorRepo);
                     sucesso = persistenciaProduto.escreverProdutos(produtos);
@@ -118,12 +127,27 @@ public class OperacaoItem implements IOperacaoItem {
         boolean sucesso = false;
         if (verificarExclusao(id)) {
             List<Produtos> produtos = persistenciaProduto.lerProdutos();
+            Produtos produtoRemovido = null;
             for (int i = 0; i < produtos.size(); i++) {
                 Produtos produtoAtual = produtos.get(i);
                 if (produtoAtual.getId() == id) {
+                    produtoRemovido = produtoAtual;
                     produtoAtual.setDisponibilidade("INDISPONIVEL");
                     sucesso = persistenciaProduto.escreverProdutos(produtos);
                     break;
+                }
+            }
+            
+            if (sucesso && produtoRemovido != null) {
+                List<Categoria> categorias = persistenciaCategoria.lerCategoria();
+                for (Categoria c : categorias) {
+                    if (c.getId() == produtoRemovido.getIdCategoria()) {
+                        int novaQtd = c.getQuantidade() - 1;
+                        if (novaQtd < 0) novaQtd = 0;
+                        c.setQuantidade(novaQtd);
+                        persistenciaCategoria.atualizarCategoria(categorias);
+                        break;
+                    }
                 }
             }
         }
