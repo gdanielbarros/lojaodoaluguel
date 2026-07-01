@@ -88,7 +88,7 @@ public class PersistenciaProdutos implements IPersistenciaProduto {
     }
     
     public boolean escreverRelatorioItensPorCategoria(List<String[]> dados) {
-        String caminho = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relatorios" + File.separator + "itensDisponivelCategoria.csv";
+        String caminho = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relátorios" + File.separator + "itensDisponivelCategoria.csv";
         String[] cabecalho = {"Categoria", "ID_Produto", "Nome", "TaxaDiaria", "Conservacao"};
         IEscreverCSV escritor = new EscreverCSV();
         return escritor.escrever(caminho, cabecalho, dados, linha -> linha);
@@ -127,7 +127,7 @@ public class PersistenciaProdutos implements IPersistenciaProduto {
     }
 
     public boolean escreverProdutosAlugados(List<String[]> dados) {
-        String caminho = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relatorios" + File.separator + "itensAlugados.csv";
+        String caminho = System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + "java" + File.separator + "br" + File.separator + "upe" + File.separator + "lojao" + File.separator + "Relátorios" + File.separator + "itensAlugados.csv";
         String[] cabecalho = {"ID_Produto", "Nome", "Taxa_Diaria", "ID_Cliente", "Data_Devolucao", "Atrasado"};
         IEscreverCSV escritor = new EscreverCSV();
         return escritor.escrever(caminho, cabecalho, dados, linha -> linha);

@@ -5,7 +5,9 @@ import br.upe.lojao.persistencia.IPersistenciaContrato;
 import br.upe.lojao.persistencia.PersistenciaContratos;
 import br.upe.lojao.persistencia.entidades.Administrador;
 import br.upe.lojao.persistencia.entidades.Cliente;
+import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Funcionario;
+import br.upe.lojao.persistencia.entidades.Ocorrencias;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +36,20 @@ public class OperacaoUsuario implements IOperacaoUsuario{
     }
 
     public String deletarCliente(int id){
-       
-        if (!persistenciaContrato.contratosClienteAtivos(id).isEmpty()) {
+        
+        List<Contrato> ativos = persistenciaContrato.contratosClienteAtivos(id);
+        if (ativos != null && !ativos.isEmpty()) {
             return "Nao e possivel excluir: cliente possui aluguel(eis) ativo(s).";
         }
-        if (!persistenciaContrato.clienteMultaPendente(id).isEmpty()) {
+        
+        List<Ocorrencias> multas = persistenciaContrato.clienteMultaPendente(id);
+        if (multas != null && !multas.isEmpty()) {
             return "Nao e possivel excluir: cliente possui multa(s) pendente(s).";
+        }
+        
+        List<Contrato> historico = persistenciaContrato.clienteHistorico(id, 1);
+        if (historico != null && !historico.isEmpty()) {
+            return "Nao e possivel excluir: cliente possui historico de contratos.";
         }
         return persistenciaUsuario.deletarCliente(id);
     }
