@@ -27,18 +27,11 @@ public class MenuCliente extends Menu{
                 System.out.println("Nenhum item disponível no momento.");
             } else {
                 System.out.println("===========Itens Disponíveis===========");
-                for (Produtos p : disponiveis) {
-                    System.out.println("ID: " + p.getId());
-                    System.out.println("Categoria: " + p.getIdCategoria());
-                    System.out.println("Fornecedor: " + p.getIdFornecedor());
-                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
-                    System.out.println("Conservação: " + p.getConservacao());
-                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
-                    System.out.println("---------------------------------------");
+                imprimirProdutos(disponiveis);
                 }
-            } 
-        }
-    }
+         } 
+     }
+    
         
     @Override
     protected void imprimirRespostaFacadeListaContrato(int entrada) {

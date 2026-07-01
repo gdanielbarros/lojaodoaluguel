@@ -2,6 +2,8 @@ package br.upe.lojao.ui;
 
 import br.upe.lojao.negocios.IOperacaoUsuario;
 import br.upe.lojao.negocios.OperacaoUsuario;
+import br.upe.lojao.persistencia.entidades.Produtos;
+import java.util.List;
 
 public abstract class Menu extends TelaLogin {
 
@@ -30,5 +32,8 @@ public abstract class Menu extends TelaLogin {
     protected void imprimirRespostaFacadeListaOcorrencia (int entrada){}
 
     protected void imprimirRespostaFacadeListaFornecedor (int entrada){}
+    
+    protected void imprimirProdutos(List<Produtos> lista) {}
+    
 }
 

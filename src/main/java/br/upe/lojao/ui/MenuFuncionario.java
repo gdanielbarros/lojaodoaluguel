@@ -194,15 +194,7 @@ public class MenuFuncionario extends Menu {
 		                System.out.println("Nenhum item disponível no momento.");
 		            } else {
 		                System.out.println("===========Itens Disponíveis===========");
-		                for (Produtos p : disponiveis) {
-		                    System.out.println("ID: " + p.getId());
-		                    System.out.println("Categoria: " + p.getIdCategoria());
-		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
-		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
-		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
-		                    System.out.println("---------------------------------------");
-		                }
+		                imprimirProdutos(disponiveis);
 		            }
 		        } else if (opcao ==2) { // todos os itens
 		            List<Produtos> todos = facade.listarTodosItens();
@@ -210,16 +202,7 @@ public class MenuFuncionario extends Menu {
 		                System.out.println("Nenhum produto foi cadastrado.");
 		            } else {
 		                System.out.println("===========Todos os Produtos===========");
-		                for (Produtos p : todos) {
-		                    System.out.println("ID: " + p.getId());
-		                    System.out.println("Categoria: " + p.getIdCategoria());
-		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
-		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
-		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
-		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
-		                    System.out.println("---------------------------------------");
-		                }
+		                imprimirProdutos(todos);
 		            }
 		        } else if (opcao ==3) { // buscapor nome
 		        	System.out.println("Diga-me o nome do produto desejado.");
@@ -229,16 +212,7 @@ public class MenuFuncionario extends Menu {
 		                System.out.println("Nenhum produto encontrado com o nome: " + nome);
 		            } else {
 		                System.out.println("===========Produtos Encontrados===========");
-		                for (Produtos p : resultados) {
-		                    System.out.println("ID: " + p.getId());
-		                    System.out.println("Categoria: " + p.getIdCategoria());
-		                    System.out.println("Fornecedor: " + p.getIdFornecedor());
-		                    System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
-		                    System.out.println("Disponibilidade: " + p.getDisponibilidade());
-		                    System.out.println("Conservação: " + p.getConservacao());
-		                    System.out.println("Valor Reposição: R$ " + p.getValorRepo());
-		                    System.out.println("---------------------------------------");
-		                }
+		                imprimirProdutos(resultados);
 		            }
 		        }
             } catch (Exception excecao) {
@@ -248,6 +222,20 @@ public class MenuFuncionario extends Menu {
         }
     }
 
+    @Override
+    protected void imprimirProdutos(List<Produtos> lista) {
+        for (Produtos p : lista) {
+            System.out.println("ID: " + p.getId());
+            System.out.println("Categoria: " + p.getIdCategoria());
+            System.out.println("Fornecedor: " + p.getIdFornecedor());
+            System.out.println("Taxa Diária: R$ " + p.getTaxaDiaria());
+            System.out.println("Disponibilidade: " + p.getDisponibilidade());
+            System.out.println("Conservação: " + p.getConservacao());
+            System.out.println("Valor Reposição: R$ " + p.getValorRepo());
+            System.out.println("---------------------------------------");
+        }
+    }
+    
     @Override
     protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado) {}
 
