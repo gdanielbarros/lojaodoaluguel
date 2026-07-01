@@ -39,6 +39,15 @@ public class Facade {
         return operacaoUsuario.autenticarUsuario(login, senha, tipo) != -1;
     }
 
+    /**
+     * RN03: verifica contratos atrasados e aplica/atualiza as multas
+     * automaticamente. Deve ser chamado apos o login para garantir que
+     * as pendencias estejam em dia antes de exibir qualquer menu.
+     */
+    public void verificarAtrasos() {
+        operacaoContrato.verificarMultas();
+    }
+
     
     public String cadastrarCliente(Cliente cliente){
         return operacaoUsuario.cadastrarCliente(cliente);
@@ -113,6 +122,10 @@ public class Facade {
         return operacaoContrato.listarTodos();
     }
 
+    public java.math.BigDecimal faturamento(LocalDateTime dataInicio, LocalDateTime dataFim, int opcao) {
+        return operacaoContrato.faturamento(dataInicio, dataFim, opcao);
+    }
+
     public List<Contrato> contratosClienteEspecifico(int idCliente) {
         return operacaoContrato.listarContratosCliente(idCliente);
     }
@@ -144,8 +157,27 @@ public class Facade {
     }
 
 	public Produtos buscarProdutoPorId(int id) {
-		// TODO Gerar essa função dentro de OperacaoItem se nescessario.
-		return null;
+		return operacaoItem.buscarPorId(id);
+	}
+
+	public boolean cadastrarProduto(String nome, int idCategoria, int idFornecedor, java.math.BigDecimal taxaDiaria,
+			String disponibilidade, String conservacao, java.math.BigDecimal valorReposicao) {
+		Produtos produto = new Produtos(0, nome, taxaDiaria, idCategoria, idFornecedor, disponibilidade, conservacao, valorReposicao);
+		return operacaoItem.cadastrarItem(produto);
+	}
+
+	public boolean editarProduto(int id, java.math.BigDecimal novaTaxa, String novaDisponibilidade,
+			String novaConservacao, java.math.BigDecimal novoValorReposicao) {
+		Produtos atual = operacaoItem.buscarPorId(id);
+		if (atual == null) {
+			return false;
+		}
+		return operacaoItem.editarItem(id, atual.getNome(), novaTaxa, atual.getIdCategoria(), atual.getIdFornecedor(),
+				novaDisponibilidade, novaConservacao, novoValorReposicao);
+	}
+
+	public boolean deletarProduto(int id) {
+		return operacaoItem.deletarItem(id);
 	}
 
     // --- Categoria ---
