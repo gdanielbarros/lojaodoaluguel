@@ -39,6 +39,7 @@ public class TelaLogin {
                     int validacao = operacaoUsuario.autenticarUsuario(this.login, this.senha, this.tipo);
                     if(validacao > -1){
                         this.id = validacao;
+                        facade.verificarAtrasos(); 
                         if(tipo.equalsIgnoreCase("cliente")) {
                             MenuCliente menuCliente = new MenuCliente();
                             menuCliente.receberValidarEntradas();
@@ -62,4 +63,3 @@ public class TelaLogin {
         } catch (Exception e){}
     }
 }
-

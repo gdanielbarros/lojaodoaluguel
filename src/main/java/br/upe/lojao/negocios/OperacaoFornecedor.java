@@ -19,7 +19,7 @@ public class OperacaoFornecedor implements IOperacaoFornecedor {
     private PersistenciaFornecedor persistencia = new PersistenciaFornecedor();
     private List<Fornecedor> fornecedores;
 
-    // Contador simples para gerar IDs únicos, simulando um auto-incremento.
+    
     private int proximoId = 1;
 
     public OperacaoFornecedor() {

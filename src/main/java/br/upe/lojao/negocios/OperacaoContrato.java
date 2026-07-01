@@ -52,7 +52,7 @@ public class OperacaoContrato implements IOperacaoContrato {
             operacaoMultas.aplicarMulta(atrasados.get(x).id());
         }
 
-        // Recarrega os dados do disco para pegar o idMulta/valorMulta que aplicarMulta acabou de gravar
+       
         persistencia.carregarDados();
 
         for (int x = 0; x < atrasados.size(); x++) {
@@ -68,11 +68,11 @@ public class OperacaoContrato implements IOperacaoContrato {
     }
 
     public boolean registrar(int idProduto, LocalDateTime dataInicio, LocalDateTime dataFinal, int idCliente) {
-        // RN01: item nao pode estar em contrato ativo/atrasado
+        
         if (persistencia.itemContratoAtivo(idProduto)) {
             return false;
         }
-        // RN04: cliente com multa pendente nao pode alugar
+        
         if (!persistencia.clienteMultaPendente(idCliente).isEmpty()) {
             return false;
         }
@@ -93,7 +93,7 @@ public class OperacaoContrato implements IOperacaoContrato {
         int id = gerarId();
         long diasAlugados = Duration.between(dataInicio, dataFinal).toDays();
         if (diasAlugados <= 0) {
-            diasAlugados = 1; // RN02: aluguel de menos de 24h cobra o minimo de 1 dia
+            diasAlugados = 1; 
         }
         BigDecimal valorTotal = calcularAluguel(diasAlugados, idProduto);
         Contrato novoContrato = new Contrato(id, idCliente, dataInicio, dataFinal, diasAlugados, valorTotal, idProduto, "ATIVO", 0, new BigDecimal("0"));
@@ -188,8 +188,7 @@ public class OperacaoContrato implements IOperacaoContrato {
         BigDecimal valorMulta = concluir.valorMulta();
 
         if (atrasado) {
-            // RN03: garante que a multa por atraso seja calculada e persistida
-            // mesmo que verificarMultas() ainda nao tenha rodado para este contrato.
+            
             OperacaoMultas operacaoMultas = new OperacaoMultas();
             operacaoMultas.aplicarMulta(idContrato);
             Contrato comMulta = persistencia.buscarContrato(idContrato);
@@ -199,9 +198,7 @@ public class OperacaoContrato implements IOperacaoContrato {
 
         Contrato concluido = new Contrato(concluir.id(), concluir.idCliente(), concluir.dataInicio(), dataFinal, diasAlugados, valorTotal, concluir.idItem(), "CONCLUIDO", idMulta, valorMulta);
 
-        // Nao marcamos a multa como paga automaticamente aqui: RN04 exige que a
-        // pendencia seja quitada explicitamente antes de novos alugueis; marcar
-        // como paga so por concluir a devolucao anularia essa regra.
+        
         return persistencia.atualizarContrato(concluido);
     }
 

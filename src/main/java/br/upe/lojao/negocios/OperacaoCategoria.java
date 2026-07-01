@@ -24,7 +24,7 @@ public class OperacaoCategoria implements IOperacaoCategoria {
     private IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
     private List<Categoria> categorias;
 
-    // Contador simples para gerar IDs únicos, simulando um auto-incremento.
+    
     private int proximoId = 1;
 
     public OperacaoCategoria() {
@@ -125,7 +125,7 @@ public class OperacaoCategoria implements IOperacaoCategoria {
         List<Produtos> produtos = persistenciaProduto.lerProdutos();
         for (Produtos p : produtos) {
             if (p.getIdCategoria() == id) {
-                return false; // categoria em uso, exclusao bloqueada
+                return false; 
             }
         }
         categorias.remove(categoria);

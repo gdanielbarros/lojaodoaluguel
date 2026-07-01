@@ -34,7 +34,7 @@ public class OperacaoUsuario implements IOperacaoUsuario{
     }
 
     public String deletarCliente(int id){
-        // RN05: nao permite excluir cliente com aluguel ativo ou multa pendente
+       
         if (!persistenciaContrato.contratosClienteAtivos(id).isEmpty()) {
             return "Nao e possivel excluir: cliente possui aluguel(eis) ativo(s).";
         }
