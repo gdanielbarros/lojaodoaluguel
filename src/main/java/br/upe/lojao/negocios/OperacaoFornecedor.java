@@ -1,7 +1,10 @@
 package br.upe.lojao.negocios;
 
+import br.upe.lojao.persistencia.IPersistenciaProduto;
 import br.upe.lojao.persistencia.PersistenciaFornecedor;
+import br.upe.lojao.persistencia.PersistenciaProdutos;
 import br.upe.lojao.persistencia.entidades.Fornecedor;
+import br.upe.lojao.persistencia.entidades.Produtos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +100,13 @@ public class OperacaoFornecedor implements IOperacaoFornecedor {
         Fornecedor fornecedor = buscarPorId(id);
         if (fornecedor == null) {
             return false;
+        }
+        IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
+        List<Produtos> produtos = persistenciaProduto.lerProdutos();
+        for (Produtos p : produtos) {
+            if (p.getIdFornecedor() == id) {
+                return false;
+            }
         }
         fornecedor.setStatus("Inativo");
         persistencia.atualizarFornecedor(fornecedores);

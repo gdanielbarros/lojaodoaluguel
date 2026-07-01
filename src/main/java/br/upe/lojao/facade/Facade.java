@@ -162,14 +162,14 @@ public class Facade {
 		return operacaoItem.cadastrarItem(produto);
 	}
 
-	public boolean editarProduto(int id, java.math.BigDecimal novaTaxa, String novaDisponibilidade,
+	public boolean editarProduto(int id, java.math.BigDecimal novaTaxa, int novoFornecedor,
 			String novaConservacao, java.math.BigDecimal novoValorReposicao) {
 		Produtos atual = operacaoItem.buscarPorId(id);
 		if (atual == null) {
 			return false;
 		}
-		return operacaoItem.editarItem(id, atual.getNome(), novaTaxa, atual.getIdCategoria(), atual.getIdFornecedor(),
-				novaDisponibilidade, novaConservacao, novoValorReposicao);
+		return operacaoItem.editarItem(id, atual.getNome(), novaTaxa, atual.getIdCategoria(), novoFornecedor,
+				novaConservacao, novoValorReposicao);
 	}
 
 	public boolean deletarProduto(int id) {
@@ -194,8 +194,8 @@ public class Facade {
         return operacaoCategoria.buscarCategoria(nome);
     }
 
-    public boolean editarCategoria(int id, String novoNome, int novaQuantidade) {
-        return operacaoCategoria.editarCategoria(id, novoNome, novaQuantidade);
+    public boolean editarCategoria(int id, String novoNome) {
+        return operacaoCategoria.editarCategoria(id, novoNome);
     }
 
     public boolean deletarCategoria(int id) {

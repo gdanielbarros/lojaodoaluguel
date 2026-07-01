@@ -55,6 +55,7 @@ public class OperacaoCategoria implements IOperacaoCategoria {
 
     @Override
     public List<Categoria> listarCategorias() {
+    	this.categorias = persistencia.lerCategoria();
         return categorias;
     }
 
@@ -80,13 +81,20 @@ public class OperacaoCategoria implements IOperacaoCategoria {
     }
 
     @Override
-    public boolean editarCategoria(int id, String novoNome, int novaQuantidade) {
+    public boolean editarCategoria(int id, String novoNome) {
         Categoria categoria = buscarPorId(id);
         if (categoria == null) {
             return false;
         }
         categoria.setNome(novoNome);
-        categoria.setQuantidade(novaQuantidade);
+        int quantidade = 0;
+        List<Produtos> produtos = persistenciaProduto.lerProdutos();
+        for (Produtos p : produtos) {
+            if (p.getIdCategoria() == id && !p.getDisponibilidade().equalsIgnoreCase("INDISPONIVEL")) {
+                quantidade++;
+            }
+        }
+        categoria.setQuantidade(quantidade);
         persistencia.atualizarCategoria(categorias);
         return true;
     }

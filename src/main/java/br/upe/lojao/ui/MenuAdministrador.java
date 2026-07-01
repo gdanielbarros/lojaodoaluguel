@@ -265,9 +265,7 @@ public class MenuAdministrador extends MenuFuncionario {
                 limparBuffer();
                 System.out.print("Novo nome: ");
                 String novoNome = scanner.nextLine();
-                System.out.print("Nova quantidade: ");
-                int novaQuantidade = scanner.nextInt();
-                if (facade.editarCategoria(id, novoNome, novaQuantidade)) {
+                if (facade.editarCategoria(id, novoNome)) {
                     System.out.println("Categoria editada com sucesso.");
                 } else {
                     System.out.println("Erro ao editar categoria.");
@@ -620,14 +618,17 @@ public class MenuAdministrador extends MenuFuncionario {
             String taxaStr = scanner.nextLine();
             BigDecimal novaTaxa = taxaStr.isEmpty() ? produto.getTaxaDiaria() : new BigDecimal(taxaStr);
 
-            System.out.print("Nova Disponibilidade (1-disponivel / 0-indisponivel / ENTER-manter): ");
-            String respStr = scanner.nextLine();
-            String disponibilidade = produto.getDisponibilidade();
-            if (respStr.equals("1")) {
-                disponibilidade = "DISPONIVEL";
-            } else if (respStr.equals("0")) {
-                disponibilidade = "INDISPONIVEL";
+            System.out.println("Fornecedores disponiveis:");
+            List<Fornecedor> fornecedores = facade.listarFornecedores();
+            if (fornecedores.isEmpty()) {
+                System.out.println("Nenhum fornecedor cadastrado.");
             }
+            for (Fornecedor f : fornecedores) {
+                System.out.println("ID: " + f.getId() + " - Nome: " + f.getNome());
+            }
+            System.out.print("Novo ID do Fornecedor (ENTER para manter o atual");
+            String fornStr = scanner.nextLine();
+            int novoFornecedor = fornStr.isEmpty() ? produto.getIdFornecedor() : Integer.parseInt(fornStr);
 
             System.out.print("Novo Estado de Conservacao: ");
             String conservacao = scanner.nextLine();
@@ -639,7 +640,7 @@ public class MenuAdministrador extends MenuFuncionario {
             String valorStr = scanner.nextLine();
             BigDecimal novoValor = valorStr.isEmpty() ? produto.getValorRepo() : new BigDecimal(valorStr);
 
-            boolean resultado = facade.editarProduto(id, novaTaxa, disponibilidade, conservacao, novoValor);
+            boolean resultado = facade.editarProduto(id, novaTaxa, novoFornecedor, conservacao, novoValor);
 
             if (resultado) {
                 System.out.println("Produto editado com sucesso!");

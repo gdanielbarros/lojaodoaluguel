@@ -14,7 +14,7 @@ public interface IOperacaoCategoria {
 
     List<Categoria> buscarCategoria(String nome);
 
-    boolean editarCategoria(int id, String novoNome, int novaQuantidade);
+    boolean editarCategoria(int id, String novoNome);
 
     boolean deletarCategoria(int id);
 }
