@@ -477,7 +477,8 @@ public class MenuAdministrador extends MenuFuncionario {
     }
 
     @Override
-    protected void imprimirRespostaFacadeBoolean(int entrada) {}
+    protected void imprimirRespostaFacadeBoolean(int entrada) {
+    }
 
     @Override
     protected void imprimirRespostaFacadeListaProdutos(int entrada) {
@@ -760,16 +761,4 @@ public class MenuAdministrador extends MenuFuncionario {
             }
         }
     }
-
-    @Override
-    protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado) {}
-
-    @Override
-    protected void imprimirRespostaFacadeMapLista(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeContrato(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeListaCliente(int entrada) {}
 }

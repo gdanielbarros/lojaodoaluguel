@@ -173,7 +173,7 @@ public class MenuFuncionario extends Menu {
                                 System.out.println("Categoria: " + categoriaAtual);
                             }
                             System.out.println("  ID: " + linha[1] + " | Nome: " + linha[2] +
-                                               " | Taxa: R$ " + linha[3] + " | Conservacao: " + linha[4]);
+                                    " | Taxa: R$ " + linha[3] + " | Conservacao: " + linha[4]);
                         }
                         System.out.println("---------------------------------------");
                     }
@@ -324,7 +324,8 @@ public class MenuFuncionario extends Menu {
     }
 
     @Override
-    protected void imprimirRespostaFacadeBoolean(int entrada) {}
+    protected void imprimirRespostaFacadeBoolean(int entrada) {
+    }
 
     @Override
     protected void imprimirRespostaFacadeListaProdutos(int entrada) {
@@ -514,22 +515,4 @@ public class MenuFuncionario extends Menu {
             }
         }
     }
-
-    @Override
-    protected void imprimirRespostaFacadeString(int entrada, int escolha, String dado) {}
-
-    @Override
-    protected void imprimirRespostaFacadeMapLista(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeContrato(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeListaCliente(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeListaCategoria(int entrada) {}
-
-    @Override
-    protected void imprimirRespostaFacadeListaFornecedor(int entrada) {}
 }
