@@ -1,2 +1,4 @@
 id,nome,login,senha,email
-"1","vini","vini","777","ViGameplays@gmail.com"
+"1","admin","admin","admin","admin"
+"2","cliente","cliente","cliente","cliente"
+"3","funcionario","funcionario","funcionario","funcionario"
