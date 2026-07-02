@@ -161,11 +161,11 @@ public class PersistenciaContratos implements IPersistenciaContrato {
                     List<Produtos> produtos = persistenciaProduto.lerProdutos();
                     for(int y=0 ; y < produtos.size() ; y++){
                         Produtos p = produtos.get(y);
-                        if(p.getId() == listaContratos.get(y).idItem()){
+                        if(p.getId() == contrato.idItem()){  
                             p.setDisponibilidade("DISPONIVEL");
                             produtos.set(y,p);
                             resultado = persistenciaProduto.escreverProdutos(produtos);
-
+                            break;
                         }
                     }
                 }

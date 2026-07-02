@@ -190,8 +190,6 @@ public class OperacaoContrato implements IOperacaoContrato {
         LocalDateTime dataFinal = concluir.dataFinal();
         long diasAlugados = concluir.diasAlugados();
         BigDecimal valorTotal = concluir.valorTotal();
-        boolean atrasado = LocalDateTime.now().isAfter(concluir.dataFinal());
-
         if (LocalDateTime.now().isBefore(dataFinal)) {
             dataFinal = LocalDateTime.now();
             diasAlugados = Duration.between(concluir.dataInicio(), dataFinal).toDays();
@@ -200,6 +198,8 @@ public class OperacaoContrato implements IOperacaoContrato {
             }
             valorTotal = calcularAluguel(diasAlugados, concluir.idItem());
         }
+
+        boolean atrasado = LocalDateTime.now().isAfter(concluir.dataFinal());  // ✅ Agora calculado corretamente
 
         int idMulta = concluir.idMulta();
         BigDecimal valorMulta = concluir.valorMulta();
