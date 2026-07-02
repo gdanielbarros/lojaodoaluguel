@@ -35,8 +35,8 @@ public class Facade {
     private IOperacaoFornecedor operacaoFornecedor = new OperacaoFornecedor();
 
 
-    public boolean autenticarUsuario(String login, String senha, String tipo) {
-        return operacaoUsuario.autenticarUsuario(login, senha, tipo) != -1;
+    public int autenticarUsuario(String login, String senha, String tipo) {
+        return operacaoUsuario.autenticarUsuario(login, senha, tipo);
     }
 
     

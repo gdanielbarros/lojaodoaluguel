@@ -1,9 +1,8 @@
 package br.upe.lojao.ui;
 
 import br.upe.lojao.facade.Facade;
-import br.upe.lojao.negocios.IOperacaoUsuario;
-import br.upe.lojao.negocios.OperacaoUsuario;
 import br.upe.lojao.persistencia.entidades.Produtos;
+
 import java.util.List;
 import java.util.Scanner;
 

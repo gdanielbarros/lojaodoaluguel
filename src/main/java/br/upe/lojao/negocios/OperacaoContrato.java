@@ -199,7 +199,7 @@ public class OperacaoContrato implements IOperacaoContrato {
             valorTotal = calcularAluguel(diasAlugados, concluir.idItem());
         }
 
-        boolean atrasado = LocalDateTime.now().isAfter(concluir.dataFinal());  // ✅ Agora calculado corretamente
+        boolean atrasado = LocalDateTime.now().isAfter(concluir.dataFinal());
 
         int idMulta = concluir.idMulta();
         BigDecimal valorMulta = concluir.valorMulta();

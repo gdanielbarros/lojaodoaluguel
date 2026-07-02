@@ -2,8 +2,6 @@ package br.upe.lojao.ui;
 
 import java.util.Scanner;
 import br.upe.lojao.facade.Facade;
-import br.upe.lojao.negocios.IOperacaoUsuario;
-import br.upe.lojao.negocios.OperacaoUsuario;
 
 public class TelaLogin {
     protected String login;
@@ -12,8 +10,6 @@ public class TelaLogin {
     protected int id;
     protected Facade facade = new Facade();
     protected Scanner scanner = new Scanner(System.in);
-    protected IOperacaoUsuario operacaoUsuario = new OperacaoUsuario();
-
 
     public static void main(String[] args) {
         TelaLogin iniciar = new TelaLogin();
@@ -44,7 +40,7 @@ public class TelaLogin {
             } else if (opcao.equals("tipo")) {
                 if (resposta.equalsIgnoreCase("cliente") || resposta.equalsIgnoreCase("funcionario") || resposta.equalsIgnoreCase("administrador")) {
                     this.tipo = resposta;
-                    int validacao = operacaoUsuario.autenticarUsuario(this.login, this.senha, this.tipo);
+                    int validacao = facade.autenticarUsuario(this.login, this.senha, this.tipo);
                     if (validacao > -1) {
                         this.id = validacao;
                         facade.verificarAtrasos();

@@ -4,6 +4,7 @@ import br.upe.lojao.facade.Facade;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import br.upe.lojao.persistencia.entidades.Produtos;
+
 import java.util.List;
 import java.util.Scanner;
 
