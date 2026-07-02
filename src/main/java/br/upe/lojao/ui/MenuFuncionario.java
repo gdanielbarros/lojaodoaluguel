@@ -1,5 +1,6 @@
 package br.upe.lojao.ui;
 
+import br.upe.lojao.facade.Facade;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import br.upe.lojao.persistencia.entidades.Produtos;
@@ -8,10 +9,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Scanner;
 
 public class MenuFuncionario extends Menu {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public MenuFuncionario(int id, String login, String senha, String tipo, Scanner scanner, Facade facade) {
+        super(id, login, senha, tipo, scanner, facade);
+    }
 
     @Override
     public void receberValidarEntradas() {

@@ -61,6 +61,7 @@ public class PersistenciaUsuario implements IPersistenciaUsuario{
             for (Cliente c : clientes) {
                 if (login.equals(c.login()) && senha.equals(c.senha())) {
                     resposta = c.id();
+                    break;
                 }
             }
         } else if (tipo.equalsIgnoreCase("funcionario")) {

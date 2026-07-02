@@ -1,1 +1,2 @@
-id,idContrato,idCliente,valorBase,dataInicio,dataFinal,valorFinal,valorPorcetangem,avarias,status
+"id","idContrato","idCliente","valorBase","dataInicio","dataFinal","valorFinal","valorPorcentagem","avarias","status"
+"1","4","1","3330","2025-02-02T00:00","2026-01-01T00:00","201.0000","0.10","","PENDENTE"

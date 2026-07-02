@@ -1,11 +1,22 @@
 package br.upe.lojao.ui;
 
+import br.upe.lojao.facade.Facade;
 import br.upe.lojao.negocios.IOperacaoUsuario;
 import br.upe.lojao.negocios.OperacaoUsuario;
 import br.upe.lojao.persistencia.entidades.Produtos;
 import java.util.List;
+import java.util.Scanner;
 
 public abstract class Menu extends TelaLogin {
+
+    public Menu(int id, String login, String senha, String tipo, Scanner scanner, Facade facade){
+        this.id = id;
+        this.login = login;
+        this.senha = senha;
+        this.tipo = tipo;
+        this.scanner = scanner;
+        this.facade = facade;
+    }
 
     protected void receberValidarEntradas(){}
 

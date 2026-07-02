@@ -1,11 +1,17 @@
 package br.upe.lojao.ui;
 
+import br.upe.lojao.facade.Facade;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
 import br.upe.lojao.persistencia.entidades.Produtos;
 import java.util.List;
+import java.util.Scanner;
 
 public class MenuCliente extends Menu {
+
+    public MenuCliente(int id, String login, String senha, String tipo, Scanner scanner, Facade facade) {
+        super(id, login, senha, tipo, scanner, facade);
+    }
 
     @Override
     protected void imprimirRespostaFacadeBoolean(int entrada){

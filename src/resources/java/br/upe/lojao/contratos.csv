@@ -1,1 +1,5 @@
-id,idCliente,dataInicio,dataFinal,diasAlugados,valorTotal,idItem,status,idMulta,valorMulta
+"id","idCliente","dataInicio","dataFinal","diasAlugados","valortotal","idItem","status","idMulta","valorMulta"
+"1","1","2026-07-01T00:00","2026-07-01T20:14:51.980503149","1","10","1","CONCLUIDO","0","0"
+"2","1","2026-07-01T00:00","2026-07-01T20:49:56.384579887","1","10","1","CONCLUIDO","0","0"
+"3","3","2026-01-01T00:00","2026-07-11T00:00","191","1910","1","ATIVO","0","0"
+"4","1","2025-02-02T00:00","2026-01-01T00:00","333","3330","2","ATRASADO","1","201.0000"

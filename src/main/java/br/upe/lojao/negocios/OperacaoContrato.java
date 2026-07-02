@@ -19,6 +19,7 @@ public class OperacaoContrato implements IOperacaoContrato {
 
     private IPersistenciaContrato persistencia = new PersistenciaContratos();
     private IPersistenciaUsuario persistenciaUsuario = new PersistenciaUsuario();
+    private IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
     
     public int gerarId() {
         return persistencia.maiorIdContrato() + 1;

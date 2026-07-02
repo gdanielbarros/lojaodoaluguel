@@ -1,1 +1,4 @@
-id,nome,taxaDiaria,idCategoria,idFornecedor,disponibilidade,conservação,valorReposição
+"id","nome","taxaDiaria","idCategoria","idFornecedor","disponibilidade","conservacao","valorReposicao"
+"1","maça","10","1","1","DISPONIVEL","perfeita","20"
+"2","pera","10","1","1","INDISPONIVEL","perfeita","20"
+"3","melancia","35","1","1","DISPONIVEL","perfeita","95"

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import br.upe.lojao.persistencia.entidades.Contrato;
 import br.upe.lojao.persistencia.entidades.Ocorrencias;
+import br.upe.lojao.persistencia.entidades.Produtos;
 
 public class PersistenciaContratos implements IPersistenciaContrato {
 
@@ -20,6 +21,8 @@ public class PersistenciaContratos implements IPersistenciaContrato {
 
     private ILerCSV leitor = new LerCSV();
     private IEscreverCSV escritor = new EscreverCSV();
+
+    IPersistenciaProduto persistenciaProduto = new PersistenciaProdutos();
 
     public PersistenciaContratos() {
         carregarDados();
@@ -154,7 +157,19 @@ public class PersistenciaContratos implements IPersistenciaContrato {
         for (int x = 0; x < this.listaContratos.size(); x++) {
             if (listaContratos.get(x).id() == contrato.id()) {
                 listaContratos.set(x, contrato);
-                resultado = escreverContratos();
+                if(escreverContratos()){
+                    List<Produtos> produtos = persistenciaProduto.lerProdutos();
+                    for(int y=0 ; y < produtos.size() ; y++){
+                        Produtos p = produtos.get(y);
+                        if(p.getId() == listaContratos.get(y).idItem()){
+                            p.setDisponibilidade("DISPONIVEL");
+                            produtos.set(y,p);
+                            resultado = persistenciaProduto.escreverProdutos(produtos);
+
+                        }
+                    }
+                }
+
             }
         }
         return resultado;
