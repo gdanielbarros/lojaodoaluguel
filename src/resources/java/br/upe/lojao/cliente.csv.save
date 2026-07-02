@@ -1,2 +1,0 @@
-id,nome,login,senha,email,telefone,cpf,statusMulta,statusContrato
-1,joao,joao,123,joao@gmail.com,8199999999,111-111-111.11,false,false
